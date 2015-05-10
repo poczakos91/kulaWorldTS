@@ -1,0 +1,13 @@
+body {
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    height: 100%;
+}
+
+#WEBGL-output {
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    height: 100%;
+}

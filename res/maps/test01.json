@@ -1,0 +1,991 @@
+{
+  "name": "application-name",
+  "version": "0.0.1",
+  "backgroundObjects": [],
+  "cubeSize": 1,
+  "target": {
+    "id": 12,
+    "face": "front"
+  },
+  "messageorientation": {
+    "position" : {
+      "x": 4,
+      "y": 0.5,
+      "z": 0
+    },
+    "rotation": {
+      "x": 0,
+      "y": 1,
+      "z": 0
+    },
+    "size": 0.8
+  },
+  "ball": {
+    "startingCube": 0,
+    "startingFace": "front",
+    "startingDirection": "left",
+    "color": "0x002366",
+    "texture": {
+      "colorMapURL": "res/img/BasketballColor.jpg"
+    }
+  },
+  "elements": [
+    [
+        [
+          {
+            "id": 0,
+            "type": "cuboid",
+            "specials": [],
+            "color": "0xffffff",
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 4
+            },
+            "neighbours": [
+              {
+                "fromFace": "front",
+                "toCube": 0,
+                "toFace": "top",
+                "requiredDirection": "up",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "front",
+                "toCube": 0,
+                "toFace": "left",
+                "requiredDirection": "left",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "front",
+                "toCube": 0,
+                "toFace": "bottom",
+                "requiredDirection": "down",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "front",
+                "toCube": 0,
+                "toFace": "right",
+                "requiredDirection": "right",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "top",
+                "toCube": 0,
+                "toFace": "front",
+                "requiredDirection": "forward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "top",
+                "toCube": 1,
+                "toFace": "top",
+                "requiredDirection": "backward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "left",
+                "toCube": 0,
+                "toFace": "front",
+                "requiredDirection": "forward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "left",
+                "toCube": 1,
+                "toFace": "left",
+                "requiredDirection": "backward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "bottom",
+                "toCube": 0,
+                "toFace": "front",
+                "requiredDirection": "forward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "bottom",
+                "toCube": 1,
+                "toFace": "bottom",
+                "requiredDirection": "backward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "right",
+                "toCube": 0,
+                "toFace": "front",
+                "requiredDirection": "forward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "right",
+                "toCube": 1,
+                "toFace": "right",
+                "requiredDirection": "backward",
+                "requiredKeys": []
+              }
+            ]
+          },
+          {
+            "id": 1,
+            "type": "cuboid",
+            "specials": [],
+            "color": "0xffffff",
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 3
+            },
+            "neighbours": [
+              {
+                "fromFace": "top",
+                "toCube": 0,
+                "toFace": "top",
+                "requiredDirection": "forward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "top",
+                "toCube": 2,
+                "toFace": "top",
+                "requiredDirection": "backward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "left",
+                "toCube": 0,
+                "toFace": "left",
+                "requiredDirection": "forward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "left",
+                "toCube": 2,
+                "toFace": "left",
+                "requiredDirection": "backward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "bottom",
+                "toCube": 0,
+                "toFace": "bottom",
+                "requiredDirection": "forward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "bottom",
+                "toCube": 2,
+                "toFace": "bottom",
+                "requiredDirection": "backward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "right",
+                "toCube": 0,
+                "toFace": "right",
+                "requiredDirection": "forward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "right",
+                "toCube": 2,
+                "toFace": "right",
+                "requiredDirection": "backward",
+                "requiredKeys": []
+              }
+            ]
+          },
+          {
+            "id": 2,
+            "type": "cuboid",
+            "specials": [],
+            "color": "0xffffff",
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 2
+            },
+            "neighbours": [
+              {
+                "fromFace": "top",
+                "toCube": 1,
+                "toFace": "top",
+                "requiredDirection": "forward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "top",
+                "toCube": 3,
+                "toFace": "top",
+                "requiredDirection": "backward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "left",
+                "toCube": 1,
+                "toFace": "left",
+                "requiredDirection": "forward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "left",
+                "toCube": 3,
+                "toFace": "left",
+                "requiredDirection": "backward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "bottom",
+                "toCube": 1,
+                "toFace": "bottom",
+                "requiredDirection": "forward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "bottom",
+                "toCube": 3,
+                "toFace": "bottom",
+                "requiredDirection": "backward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "right",
+                "toCube": 1,
+                "toFace": "right",
+                "requiredDirection": "forward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "right",
+                "toCube": 3,
+                "toFace": "right",
+                "requiredDirection": "backward",
+                "requiredKeys": []
+              }
+            ]
+          },
+          {
+            "id": 3,
+            "type": "cuboid",
+            "specials": [],
+            "color": "0xffffff",
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 1
+            },
+            "neighbours": [
+              {
+                "fromFace": "top",
+                "toCube": 2,
+                "toFace": "top",
+                "requiredDirection": "forward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "top",
+                "toCube": 4,
+                "toFace": "top",
+                "requiredDirection": "backward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "left",
+                "toCube": 2,
+                "toFace": "left",
+                "requiredDirection": "forward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "left",
+                "toCube": 5,
+                "toFace": "front",
+                "requiredDirection": "backward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "bottom",
+                "toCube": 2,
+                "toFace": "bottom",
+                "requiredDirection": "forward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "bottom",
+                "toCube": 4,
+                "toFace": "bottom",
+                "requiredDirection": "backward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "right",
+                "toCube": 2,
+                "toFace": "right",
+                "requiredDirection": "forward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "right",
+                "toCube": 4,
+                "toFace": "right",
+                "requiredDirection": "backward",
+                "requiredKeys": []
+              }
+            ]
+          },
+          {
+            "id": 4,
+            "type": "cuboid",
+            "specials": [],
+            "color": "0xffffff",
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "neighbours": [
+              {
+                "fromFace": "top",
+                "toCube": 3,
+                "toFace": "top",
+                "requiredDirection": "forward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "top",
+                "toCube": 5,
+                "toFace": "top",
+                "requiredDirection": "left",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "rear",
+                "toCube": 5,
+                "toFace": "rear",
+                "requiredDirection": "left",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "rear",
+                "toCube": 4,
+                "toFace": "right",
+                "requiredDirection": "right",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "right",
+                "toCube": 3,
+                "toFace": "right",
+                "requiredDirection": "forward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "right",
+                "toCube": 4,
+                "toFace": "rear",
+                "requiredDirection": "backward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "bottom",
+                "toCube": 3,
+                "toFace": "bottom",
+                "requiredDirection": "forward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "bottom",
+                "toCube": 5,
+                "toFace": "bottom",
+                "requiredDirection": "left",
+                "requiredKeys": []
+              }
+            ]
+          },
+          {
+            "id": 5,
+            "type": "cuboid",
+            "specials": [],
+            "color": "0xffffff",
+            "position": {
+              "x": 1,
+              "y": 0,
+              "z": 0
+            },
+            "neighbours": [
+              {
+                "fromFace": "top",
+                "toCube": 4,
+                "toFace": "top",
+                "requiredDirection": "right",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "top",
+                "toCube": 6,
+                "toFace": "top",
+                "requiredDirection": "left",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "rear",
+                "toCube": 4,
+                "toFace": "rear",
+                "requiredDirection": "right",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "rear",
+                "toCube": 6,
+                "toFace": "rear",
+                "requiredDirection": "left",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "bottom",
+                "toCube": 4,
+                "toFace": "bottom",
+                "requiredDirection": "right",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "bottom",
+                "toCube": 6,
+                "toFace": "bottom",
+                "requiredDirection": "left",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "front",
+                "toCube": 3,
+                "toFace": "left",
+                "requiredDirection": "right",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "front",
+                "toCube": 6,
+                "toFace": "front",
+                "requiredDirection": "left",
+                "requiredKeys": []
+              }
+            ]
+          },
+          {
+            "id": 6,
+            "type": "cuboid",
+            "specials": [],
+            "color": "0xffffff",
+            "position": {
+              "x": 2,
+              "y": 0,
+              "z": 0
+            },
+            "neighbours": [
+              {
+                "fromFace": "top",
+                "toCube": 5,
+                "toFace": "top",
+                "requiredDirection": "right",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "top",
+                "toCube": 7,
+                "toFace": "top",
+                "requiredDirection": "left",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "rear",
+                "toCube": 5,
+                "toFace": "rear",
+                "requiredDirection": "right",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "rear",
+                "toCube": 7,
+                "toFace": "rear",
+                "requiredDirection": "left",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "bottom",
+                "toCube": 5,
+                "toFace": "bottom",
+                "requiredDirection": "right",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "bottom",
+                "toCube": 7,
+                "toFace": "bottom",
+                "requiredDirection": "left",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "front",
+                "toCube": 5,
+                "toFace": "front",
+                "requiredDirection": "right",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "front",
+                "toCube": 7,
+                "toFace": "front",
+                "requiredDirection": "left",
+                "requiredKeys": []
+              }
+            ]
+          },
+          {
+            "id": 7,
+            "type": "cuboid",
+            "specials": [],
+            "color": "0xffffff",
+            "position": {
+              "x": 3,
+              "y": 0,
+              "z": 0
+            },
+            "neighbours": [
+              {
+                "fromFace": "top",
+                "toCube": 6,
+                "toFace": "top",
+                "requiredDirection": "right",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "top",
+                "toCube": 8,
+                "toFace": "top",
+                "requiredDirection": "left",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "rear",
+                "toCube": 6,
+                "toFace": "rear",
+                "requiredDirection": "right",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "rear",
+                "toCube": 8,
+                "toFace": "rear",
+                "requiredDirection": "left",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "bottom",
+                "toCube": 6,
+                "toFace": "bottom",
+                "requiredDirection": "right",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "bottom",
+                "toCube": 8,
+                "toFace": "bottom",
+                "requiredDirection": "left",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "front",
+                "toCube": 6,
+                "toFace": "front",
+                "requiredDirection": "right",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "front",
+                "toCube": 9,
+                "toFace": "right",
+                "requiredDirection": "left",
+                "requiredKeys": []
+              }
+            ]
+          },
+          {
+            "id": 8,
+            "type": "cuboid",
+            "specials": [],
+            "color": "0xffffff",
+            "position": {
+              "x": 4,
+              "y": 0,
+              "z": 0
+            },
+            "neighbours": [
+              {
+                "fromFace": "top",
+                "toCube": 9,
+                "toFace": "top",
+                "requiredDirection": "forward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "top",
+                "toCube": 7,
+                "toFace": "top",
+                "requiredDirection": "right",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "bottom",
+                "toCube": 9,
+                "toFace": "bottom",
+                "requiredDirection": "forward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "bottom",
+                "toCube": 7,
+                "toFace": "bottom",
+                "requiredDirection": "right",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "left",
+                "toCube": 9,
+                "toFace": "left",
+                "requiredDirection": "forward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "left",
+                "toCube": 8,
+                "toFace": "rear",
+                "requiredDirection": "backward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "rear",
+                "toCube": 8,
+                "toFace": "left",
+                "requiredDirection": "left",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "rear",
+                "toCube": 7,
+                "toFace": "rear",
+                "requiredDirection": "right",
+                "requiredKeys": []
+              }
+            ]
+          },
+          {
+            "id": 9,
+            "type": "cuboid",
+            "specials": [],
+            "color": "0xffffff",
+            "position": {
+              "x": 4,
+              "y": 0,
+              "z": 1
+            },
+            "neighbours": [
+              {
+                "fromFace": "top",
+                "toCube": 10,
+                "toFace": "top",
+                "requiredDirection": "forward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "top",
+                "toCube": 8,
+                "toFace": "top",
+                "requiredDirection": "backward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "left",
+                "toCube": 10,
+                "toFace": "left",
+                "requiredDirection": "forward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "left",
+                "toCube": 8,
+                "toFace": "left",
+                "requiredDirection": "backward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "bottom",
+                "toCube": 10,
+                "toFace": "bottom",
+                "requiredDirection": "forward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "bottom",
+                "toCube": 8,
+                "toFace": "bottom",
+                "requiredDirection": "backward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "right",
+                "toCube": 10,
+                "toFace": "right",
+                "requiredDirection": "forward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "right",
+                "toCube": 7,
+                "toFace": "front",
+                "requiredDirection": "backward",
+                "requiredKeys": []
+              }
+            ]
+          },
+          {
+            "id": 10,
+            "type": "cuboid",
+            "specials": [],
+            "color": "0xffffff",
+            "position": {
+              "x": 4,
+              "y": 0,
+              "z": 2
+            },
+            "neighbours": [
+              {
+                "fromFace": "top",
+                "toCube": 11,
+                "toFace": "top",
+                "requiredDirection": "forward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "top",
+                "toCube": 9,
+                "toFace": "top",
+                "requiredDirection": "backward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "left",
+                "toCube": 11,
+                "toFace": "left",
+                "requiredDirection": "forward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "left",
+                "toCube": 9,
+                "toFace": "left",
+                "requiredDirection": "backward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "bottom",
+                "toCube": 11,
+                "toFace": "bottom",
+                "requiredDirection": "forward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "bottom",
+                "toCube": 9,
+                "toFace": "bottom",
+                "requiredDirection": "backward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "right",
+                "toCube": 11,
+                "toFace": "right",
+                "requiredDirection": "forward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "right",
+                "toCube": 9,
+                "toFace": "right",
+                "requiredDirection": "backward",
+                "requiredKeys": []
+              }
+            ]
+          },
+          {
+            "id": 11,
+            "type": "cuboid",
+            "specials": [],
+            "color": "0xffffff",
+            "position": {
+              "x": 4,
+              "y": 0,
+              "z": 3
+            },
+            "neighbours": [
+              {
+                "fromFace": "top",
+                "toCube": 12,
+                "toFace": "top",
+                "requiredDirection": "forward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "top",
+                "toCube": 10,
+                "toFace": "top",
+                "requiredDirection": "backward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "left",
+                "toCube": 12,
+                "toFace": "left",
+                "requiredDirection": "forward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "left",
+                "toCube": 10,
+                "toFace": "left",
+                "requiredDirection": "backward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "bottom",
+                "toCube": 12,
+                "toFace": "bottom",
+                "requiredDirection": "forward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "bottom",
+                "toCube": 10,
+                "toFace": "bottom",
+                "requiredDirection": "backward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "right",
+                "toCube": 12,
+                "toFace": "right",
+                "requiredDirection": "forward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "right",
+                "toCube": 10,
+                "toFace": "right",
+                "requiredDirection": "backward",
+                "requiredKeys": []
+              }
+            ]
+          },
+          {
+            "id": 12,
+            "type": "cuboid",
+            "specials": [],
+            "color": "0xffffff",
+            "position": {
+              "x": 4,
+              "y": 0,
+              "z": 4
+            },
+            "neighbours": [
+              {
+                "fromFace": "top",
+                "toCube": 12,
+                "toFace": "front",
+                "requiredDirection": "forward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "top",
+                "toCube": 11,
+                "toFace": "top",
+                "requiredDirection": "backward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "left",
+                "toCube": 12,
+                "toFace": "front",
+                "requiredDirection": "forward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "left",
+                "toCube": 11,
+                "toFace": "left",
+                "requiredDirection": "backward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "bottom",
+                "toCube": 12,
+                "toFace": "front",
+                "requiredDirection": "forward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "bottom",
+                "toCube": 11,
+                "toFace": "bottom",
+                "requiredDirection": "backward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "right",
+                "toCube": 12,
+                "toFace": "front",
+                "requiredDirection": "forward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "right",
+                "toCube": 11,
+                "toFace": "right",
+                "requiredDirection": "backward",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "front",
+                "toCube": 12,
+                "toFace": "top",
+                "requiredDirection": "up",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "front",
+                "toCube": 12,
+                "toFace": "left",
+                "requiredDirection": "left",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "front",
+                "toCube": 12,
+                "toFace": "bottom",
+                "requiredDirection": "down",
+                "requiredKeys": []
+              },
+              {
+                "fromFace": "front",
+                "toCube": 12,
+                "toFace": "right",
+                "requiredDirection": "right",
+                "requiredKeys": []
+              }
+            ]
+          }
+        ]
+    ]
+  ]
+}
