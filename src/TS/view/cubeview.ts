@@ -23,23 +23,4 @@ class CubeView extends THREE.Mesh {
 
         this.geometry.colorsNeedUpdate = true;
     }
-
-    faceStringToNumber(face:string): number {
-        switch (face) {
-            case "top":
-                return 0;
-            case "bottom":
-                return 1;
-            case "left":
-                return 2;
-            case "right":
-                return 3;
-            case "front":
-                return 4;
-            case "rear":
-                return 5;
-            default :
-                throw "There's no face like: "+face;
-        }
-    }
 }

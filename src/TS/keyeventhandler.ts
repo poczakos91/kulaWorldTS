@@ -6,14 +6,14 @@ class KeyEventHandler {
     pushedKeys: {forward: boolean; left: boolean; right: boolean; jump: boolean};
     ball: Ball;
     cameraHandler: CameraHandler;
+    listenKeyDownsContext: any;
+    listenKeyUpsContext: any;
 
     constructor(cameraHandler: CameraHandler) {
         this.cameraHandler = cameraHandler;
         this.pushedKeys = {forward: false, left: false, right: false, jump: false};
-
-        var body = $('body');
-        body.on("keydown", this.listenKeyDowns.bind(this));
-        body.on("keyup", this.listenKeyUps.bind(this));
+        this.listenKeyDownsContext = this.listenKeyDowns.bind(this);
+        this.listenKeyUpsContext = this.listenKeyUps.bind(this);
     }
 
     addBall(ball: Ball) {
@@ -70,6 +70,18 @@ class KeyEventHandler {
                 this.pushedKeys.jump = false;
                 break;
         }
+    }
+
+    addListeners() {
+        var body = $('body');
+        body.on("keydown", this.listenKeyDownsContext);
+        body.on("keyup", this.listenKeyUpsContext);
+    }
+
+    removeListeners() {
+        var body = $('body');
+        body.off("keydown", this.listenKeyDownsContext);
+        body.off("keyup", this.listenKeyUpsContext);
     }
 
     moveDone() {

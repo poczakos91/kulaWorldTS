@@ -3,10 +3,13 @@
 /// <reference path="../model/cube.ts"/>
 /// <reference path="../model/ball.ts"/>
 /// <reference path="../view/mapview.ts"/>
+/// <reference path="../camera/camerahandler.ts"/>
 var MapModel = (function () {
     function MapModel() {
     }
-    MapModel.prototype.generateModel = function (rawMap, keyHandler, fpControl) {
+    MapModel.prototype.generateModel = function (rawMap, keyHandler, cameraHandler) {
+        this.cameraHandler = cameraHandler;
+        this.keyHandler = keyHandler;
         this.cubes = [];
         for (var i = 0; i < rawMap.elements.length; i++) {
             for (var j = 0; j < rawMap.elements[i].length; j++) {
@@ -25,8 +28,8 @@ var MapModel = (function () {
         this.view = new MapView();
         this.view.appendChildrenFromModel(this.cubes);
         this.view.position.set(0, 0, 0);
-        this.ball = new Ball(this.getCubeByID(rawMap.ball.startingCube), rawMap.ball.startingFace, rawMap.ball.startingDirection, this, fpControl);
-        var ballView = new BallView(0.3, rawMap.ball.texture.colorMapURL, keyHandler);
+        this.ball = new Ball(this.getCubeByID(rawMap.ball.startingCube), rawMap.ball.startingFace, rawMap.ball.startingDirection, this, cameraHandler.fpControl);
+        var ballView = new BallView(0.3, rawMap.ball.texture.colorMapURL, keyHandler, this);
         this.view.add(ballView);
         this.ball.setView(ballView);
     };
@@ -38,8 +41,27 @@ var MapModel = (function () {
         throw "There is no cube with the given id: " + id;
     };
     MapModel.prototype.checkWinnerPosition = function () {
-        //TODO csin�ld meg a kulaWorldjs alapj�n de igen gyorsan
-        return false;
+        if (this.ball.actCube.id === this.target.id && this.ball.actFace === this.target.face) {
+            this.keyHandler.removeListeners();
+            this.cameraHandler.tbControl.enabled = true;
+            this.cameraHandler.changeToTrackballControl();
+            var options = {
+                size: this.winTextOrientation.size,
+                height: 0.2,
+                weight: "normal",
+                bevelEnabled: false,
+                curveSegments: 12,
+                font: "helvetiker"
+            };
+            var geom = new THREE.TextGeometry("You win", options);
+            var mat = new THREE.MeshPhongMaterial({ specular: 0xffffff, color: 0x33bb33, shininess: 100, metal: true });
+            var youWin = THREE.SceneUtils.createMultiMaterialObject(geom, [mat]);
+            youWin.position.set(this.winTextOrientation.position.x, this.winTextOrientation.position.y, this.winTextOrientation.position.z);
+            youWin.rotation.set(this.winTextOrientation.rotation.x * Math.PI, this.winTextOrientation.rotation.y * Math.PI, this.winTextOrientation.rotation.z * Math.PI);
+            this.view.add(youWin);
+            return false;
+        }
+        return true;
     };
     return MapModel;
 })();

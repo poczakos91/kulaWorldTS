@@ -6,6 +6,7 @@
 class BallView extends THREE.Mesh{
     radius: number;
     keyHandler: KeyEventHandler;
+    map: MapModel;
     //attributes needed to rotate the ball around WORLD axises
     rotActive: boolean;
     fullRotAngle: number;
@@ -34,9 +35,10 @@ class BallView extends THREE.Mesh{
     speed: number;
 
 
-    constructor(radius: number, textureURL: string, keyHandler: KeyEventHandler) {
+    constructor(radius: number, textureURL: string, keyHandler: KeyEventHandler, map: MapModel) {
         this.keyHandler = keyHandler;
         this.radius = radius;
+        this.map = map;
         var texture = THREE.ImageUtils.loadTexture(textureURL);
         texture.minFilter = THREE.LinearFilter;
         super(new THREE.SphereGeometry(radius,20,20), new THREE.MeshPhongMaterial({map: texture}));
@@ -160,10 +162,9 @@ class BallView extends THREE.Mesh{
                 this.position.add(this.velocity2.clone().multiplyScalar(delta-newDelta));
                 this.updateRoll(this.velocity2Length*(delta-newDelta));
                 this.moveActive = false;
-                //if (kw.map.checkWinnerPosition()) { //TODO check the winner position
-                //    kw.keyHandler.moveAnimationDone(); //TODO continue the move
-                //}
-                this.keyHandler.moveDone();
+                if (this.map.checkWinnerPosition()) {
+                    this.keyHandler.moveDone();
+                }
             }
         }
 

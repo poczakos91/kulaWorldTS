@@ -10,9 +10,10 @@ var __extends = this.__extends || function (d, b) {
 };
 var BallView = (function (_super) {
     __extends(BallView, _super);
-    function BallView(radius, textureURL, keyHandler) {
+    function BallView(radius, textureURL, keyHandler, map) {
         this.keyHandler = keyHandler;
         this.radius = radius;
+        this.map = map;
         var texture = THREE.ImageUtils.loadTexture(textureURL);
         texture.minFilter = THREE.LinearFilter;
         _super.call(this, new THREE.SphereGeometry(radius, 20, 20), new THREE.MeshPhongMaterial({ map: texture }));
@@ -123,10 +124,9 @@ var BallView = (function (_super) {
                 this.position.add(this.velocity2.clone().multiplyScalar(delta - newDelta));
                 this.updateRoll(this.velocity2Length * (delta - newDelta));
                 this.moveActive = false;
-                //if (kw.map.checkWinnerPosition()) { //TODO check the winner position
-                //    kw.keyHandler.moveAnimationDone(); //TODO continue the move
-                //}
-                this.keyHandler.moveDone();
+                if (this.map.checkWinnerPosition()) {
+                    this.keyHandler.moveDone();
+                }
             }
         }
     };

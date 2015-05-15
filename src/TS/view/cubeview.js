@@ -44,24 +44,6 @@ var CubeView = (function (_super) {
         this.geometry.faces[j].color.setHex(color);
         this.geometry.colorsNeedUpdate = true;
     };
-    CubeView.prototype.faceStringToNumber = function (face) {
-        switch (face) {
-            case "top":
-                return 0;
-            case "bottom":
-                return 1;
-            case "left":
-                return 2;
-            case "right":
-                return 3;
-            case "front":
-                return 4;
-            case "rear":
-                return 5;
-            default:
-                throw "There's no face like: " + face;
-        }
-    };
     return CubeView;
 })(THREE.Mesh);
 //# sourceMappingURL=cubeview.js.map

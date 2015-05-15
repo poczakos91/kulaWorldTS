@@ -6,7 +6,7 @@
 
 class CameraHandler {
     camera: THREE.PerspectiveCamera;
-    fpControll: FirstPersonControl;
+    fpControl: FirstPersonControl;
     tbControl: THREE.TrackballControls;
     ball: Ball;
 
@@ -25,23 +25,23 @@ class CameraHandler {
         this.tbControl.maxDistance = 50;
         this.tbControl.enabled = true;
 
-        this.fpControll = new FirstPersonControl(this.camera);
+        this.fpControl = new FirstPersonControl(this.camera);
     }
 
     addBall(ball: Ball) {
         this.ball = ball;
-        this.fpControll.addBallView(this.ball.view);
+        this.fpControl.addBallView(this.ball.view);
     }
 
     switchControl() {
         if(this.tbControl.enabled) {
             this.tbControl.enabled = false;
-            this.fpControll.enabled = true;
+            this.fpControl.enabled = true;
             this.changeToFirstPersonControl();
         }
         else {
             this.tbControl.enabled = true;
-            this.fpControll.enabled = false;
+            this.fpControl.enabled = false;
             this.changeToTrackballControl();
         }
     }
@@ -68,8 +68,8 @@ class CameraHandler {
             this.tbControl.update();
         }
         else {
-            if(this.fpControll.moveActive) this.fpControll.updateMove(delta);
-            if(this.fpControll.rotActive) this.fpControll.updateRotation(delta);
+            if(this.fpControl.moveActive) this.fpControl.updateMove(delta);
+            if(this.fpControl.rotActive) this.fpControl.updateRotation(delta);
         }
     }
 }

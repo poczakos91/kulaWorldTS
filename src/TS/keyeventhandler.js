@@ -5,9 +5,8 @@ var KeyEventHandler = (function () {
     function KeyEventHandler(cameraHandler) {
         this.cameraHandler = cameraHandler;
         this.pushedKeys = { forward: false, left: false, right: false, jump: false };
-        var body = $('body');
-        body.on("keydown", this.listenKeyDowns.bind(this));
-        body.on("keyup", this.listenKeyUps.bind(this));
+        this.listenKeyDownsContext = this.listenKeyDowns.bind(this);
+        this.listenKeyUpsContext = this.listenKeyUps.bind(this);
     }
     KeyEventHandler.prototype.addBall = function (ball) {
         this.ball = ball;
@@ -59,6 +58,16 @@ var KeyEventHandler = (function () {
                 this.pushedKeys.jump = false;
                 break;
         }
+    };
+    KeyEventHandler.prototype.addListeners = function () {
+        var body = $('body');
+        body.on("keydown", this.listenKeyDownsContext);
+        body.on("keyup", this.listenKeyUpsContext);
+    };
+    KeyEventHandler.prototype.removeListeners = function () {
+        var body = $('body');
+        body.off("keydown", this.listenKeyDownsContext);
+        body.off("keyup", this.listenKeyUpsContext);
     };
     KeyEventHandler.prototype.moveDone = function () {
         if (this.pushedKeys.forward) {

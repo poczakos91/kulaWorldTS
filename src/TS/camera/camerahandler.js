@@ -17,21 +17,21 @@ var CameraHandler = (function () {
         this.tbControl.minDistance = 5;
         this.tbControl.maxDistance = 50;
         this.tbControl.enabled = true;
-        this.fpControll = new FirstPersonControl(this.camera);
+        this.fpControl = new FirstPersonControl(this.camera);
     }
     CameraHandler.prototype.addBall = function (ball) {
         this.ball = ball;
-        this.fpControll.addBallView(this.ball.view);
+        this.fpControl.addBallView(this.ball.view);
     };
     CameraHandler.prototype.switchControl = function () {
         if (this.tbControl.enabled) {
             this.tbControl.enabled = false;
-            this.fpControll.enabled = true;
+            this.fpControl.enabled = true;
             this.changeToFirstPersonControl();
         }
         else {
             this.tbControl.enabled = true;
-            this.fpControll.enabled = false;
+            this.fpControl.enabled = false;
             this.changeToTrackballControl();
         }
     };
@@ -54,10 +54,10 @@ var CameraHandler = (function () {
             this.tbControl.update();
         }
         else {
-            if (this.fpControll.moveActive)
-                this.fpControll.updateMove(delta);
-            if (this.fpControll.rotActive)
-                this.fpControll.updateRotation(delta);
+            if (this.fpControl.moveActive)
+                this.fpControl.updateMove(delta);
+            if (this.fpControl.rotActive)
+                this.fpControl.updateRotation(delta);
         }
     };
     return CameraHandler;
