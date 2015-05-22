@@ -4,12 +4,11 @@
 /// <reference path="../model/ball.ts"/>
 /// <reference path="../view/mapview.ts"/>
 /// <reference path="../camera/camerahandler.ts"/>
+/// <reference path="../init.ts"/>
 var MapModel = (function () {
     function MapModel() {
     }
     MapModel.prototype.generateModel = function (rawMap, keyHandler, cameraHandler) {
-        this.cameraHandler = cameraHandler;
-        this.keyHandler = keyHandler;
         this.cubes = [];
         for (var i = 0; i < rawMap.elements.length; i++) {
             for (var j = 0; j < rawMap.elements[i].length; j++) {
@@ -42,9 +41,7 @@ var MapModel = (function () {
     };
     MapModel.prototype.checkWinnerPosition = function () {
         if (this.ball.actCube.id === this.target.id && this.ball.actFace === this.target.face) {
-            this.keyHandler.removeListeners();
-            this.cameraHandler.tbControl.enabled = true;
-            this.cameraHandler.changeToTrackballControl();
+            Menu.gameBuilder.gameSucceeded();
             var options = {
                 size: this.winTextOrientation.size,
                 height: 0.2,

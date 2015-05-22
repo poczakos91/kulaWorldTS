@@ -44,6 +44,11 @@ var GameBuilder = (function () {
         this.cameraHandler.tbControl.enabled = true;
         this.cameraHandler.changeToTrackballControl();
     };
+    GameBuilder.prototype.gameSucceeded = function () {
+        this.keyHandler.removeListeners();
+        this.cameraHandler.tbControl.enabled = true;
+        this.cameraHandler.changeToTrackballControl();
+    };
     return GameBuilder;
 })();
 //# sourceMappingURL=gamebuilder.js.map

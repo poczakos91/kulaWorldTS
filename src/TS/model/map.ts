@@ -4,6 +4,7 @@
 /// <reference path="../model/ball.ts"/>
 /// <reference path="../view/mapview.ts"/>
 /// <reference path="../camera/camerahandler.ts"/>
+/// <reference path="../init.ts"/>
 
 class MapModel {
     cubes: Cube[];
@@ -11,13 +12,9 @@ class MapModel {
     target: TargetCube;
     view: MapView;
     ball: Ball;
-    keyHandler: KeyEventHandler;
-    cameraHandler: CameraHandler;
     constructor(){}
 
     generateModel(rawMap: mapDescription, keyHandler: KeyEventHandler, cameraHandler: CameraHandler) {
-        this.cameraHandler = cameraHandler;
-        this.keyHandler = keyHandler;
         this.cubes = [];
         for(var i=0;i<rawMap.elements.length;i++) {
             for(var j=0;j<rawMap.elements[i].length;j++) {
@@ -62,9 +59,7 @@ class MapModel {
 
     checkWinnerPosition(): boolean {
         if(this.ball.actCube.id === this.target.id && this.ball.actFace === this.target.face) {
-            this.keyHandler.removeListeners();
-            this.cameraHandler.tbControl.enabled = true;
-            this.cameraHandler.changeToTrackballControl();
+            Menu.gameBuilder.gameSucceeded();
             var options: THREE.TextGeometryParameters = {
                 size: this.winTextOrientation.size,
                 height: 0.2,

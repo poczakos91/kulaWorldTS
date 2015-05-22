@@ -65,4 +65,10 @@ class GameBuilder {
         this.cameraHandler.tbControl.enabled = true;
         this.cameraHandler.changeToTrackballControl();
     }
+
+    gameSucceeded() {
+        this.keyHandler.removeListeners();
+        this.cameraHandler.tbControl.enabled = true;
+        this.cameraHandler.changeToTrackballControl();
+    }
 }
