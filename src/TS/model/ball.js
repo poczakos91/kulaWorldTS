@@ -19,7 +19,8 @@ var Ball = (function () {
     };
     Ball.prototype.move = function () {
         if (!this.view.isAnimActive()) {
-            var oldDirection = Direction.vectorToString(this.direction.actDirection);
+            Direction.correct(this.direction.actDirection);
+            var oldDirection = this.direction.actDirection.clone();
             var newCube = this.actCube.moveRequest(this.actFace, oldDirection);
             if (newCube) {
                 var oldFace = Face.stringToVector(this.actFace);
@@ -30,7 +31,7 @@ var Ball = (function () {
                 var newFace = Face.stringToVector(this.actFace);
                 var oldPos = oldCube.position.clone().add(oldFace.multiplyScalar(0.5 + this.view.radius));
                 var newPos = this.actCube.position.clone().add(newFace.multiplyScalar(0.5 + this.view.radius));
-                this.view.startMove(oldPos, newPos, Direction.stringToVector(oldDirection), this.direction.actDirection, this.direction.rollAxis);
+                this.view.startMove(oldPos, newPos, oldDirection, this.direction.actDirection, this.direction.rollAxis);
                 this.fpControl.startMove(oldFace, Face.stringToVector(this.actFace), newPos, this.direction.actDirection, this.view.path1Length / this.view.velocity1Length + this.view.path2Length / this.view.velocity2Length);
             }
             else {

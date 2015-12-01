@@ -1,3 +1,5 @@
+/// <reference path="../../src/TS/model/cube.ts"/>
+/// <reference path="../../src/TS/model/cube.ts"/>
 /**
  * This file specifies the types those needed to describe the json map structure in typescript
  */
@@ -14,12 +16,13 @@ interface WinTextOrientation {
     size: number;
 }
 
-interface NeighbourDescription {
-    fromFace: string;
-    toCube: number;
-    foFace: string;
-    requiredDirection: string;
-    requiredKeys: number[];
+interface Neighbour {
+    top: Cube;
+    bottom: Cube;
+    left: Cube;
+    right: Cube;
+    front: Cube;
+    rear: Cube;
 }
 
 interface BallDescription {
@@ -36,7 +39,7 @@ interface CubeDescription {
     specials: any[];
     color: string;
     position: SimplePosition;
-    neighbours: NeighbourDescription[];
+    neighbours: Neighbour;
 }
 
 interface TargetCube {
@@ -50,7 +53,7 @@ interface mapDescription {
     backgroundObjects: any[];
     cubeSize: number;
     target: TargetCube;
-    messageorientation: WinTextOrientation;
+    messageOrientation: WinTextOrientation;
     ball: BallDescription;
     elements: CubeDescription[][][];
 }

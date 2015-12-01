@@ -66,6 +66,10 @@ var FirstPersonControl = (function () {
             this.camera.lookAt(this.ballView.position);
             this.moveActive = false;
         }
+        console.log("camera's attributes during rot ");
+        console.log("pos: " + this.camera.position.x + " # " + this.camera.position.y + " # " + this.camera.position.z);
+        console.log("up: " + this.camera.up.x + " " + this.camera.up.y + " " + this.camera.up.z);
+        console.log("----------------------------------------------------");
     };
     FirstPersonControl.prototype.updateRotation = function (delta) {
         delta *= 2;
@@ -77,6 +81,11 @@ var FirstPersonControl = (function () {
         var pos = this.ballPos.clone().add(this.ballDir.clone().multiplyScalar(-3).applyAxisAngle(this.face, this.actRot).add(this.face.clone().multiplyScalar(2)));
         this.camera.position.set(pos.x, pos.y, pos.z);
         this.camera.lookAt(this.ballPos);
+        if (!this.rotActive) {
+            console.log("camera's position after rotation");
+            console.log(this.camera.position.x, this.camera.position.y, this.camera.position.z);
+            console.log(this.camera.up.x, this.camera.up.y, this.camera.up.z);
+        }
     };
     return FirstPersonControl;
 })();

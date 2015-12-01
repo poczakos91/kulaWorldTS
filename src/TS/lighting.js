@@ -4,14 +4,14 @@
  */
 var Lighting = (function () {
     function Lighting(scene) {
-        var spotLight2 = new THREE.SpotLight(0xffffff);
-        spotLight2.position.set(-10, -10, -10);
-        spotLight2.lookAt(new THREE.Vector3());
-        scene.add(spotLight2);
         var spotLight3 = new THREE.SpotLight(0xffffff);
-        spotLight3.position.set(10, -10, 10);
+        spotLight3.position.set(-10, -10, -10);
         spotLight3.lookAt(new THREE.Vector3());
         scene.add(spotLight3);
+        var spotLight4 = new THREE.SpotLight(0xffffff);
+        spotLight4.position.set(10, -10, 10);
+        spotLight4.lookAt(new THREE.Vector3());
+        scene.add(spotLight4);
         this.directionLight = new THREE.DirectionalLight(0xffffff);
         this.directionLight.position.set(0, 10, 0);
         scene.add(this.directionLight);

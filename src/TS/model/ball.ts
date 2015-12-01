@@ -29,7 +29,8 @@ class Ball {
 
     move() {
         if(!this.view.isAnimActive()) {
-            var oldDirection: string = Direction.vectorToString(this.direction.actDirection);
+            Direction.correct(this.direction.actDirection);
+            var oldDirection: THREE.Vector3 = this.direction.actDirection.clone();
             var newCube: {cubeID: number; toFace: string} = this.actCube.moveRequest(this.actFace, oldDirection);
             if(newCube) {
                 var oldFace: THREE.Vector3 = Face.stringToVector(this.actFace);
@@ -45,7 +46,7 @@ class Ball {
                 this.view.startMove(
                     oldPos,
                     newPos,
-                    Direction.stringToVector(oldDirection),
+                    oldDirection,
                     this.direction.actDirection,
                     this.direction.rollAxis
                 );

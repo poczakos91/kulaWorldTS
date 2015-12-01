@@ -50,5 +50,11 @@ var Direction;
         throw "I can't make string from vector: " + dir.x + " " + dir.y + " " + dir.z;
     }
     Direction.vectorToString = vectorToString;
+    function correct(dir) {
+        dir.x = Math.round(dir.x);
+        dir.y = Math.round(dir.y);
+        dir.z = Math.round(dir.z);
+    }
+    Direction.correct = correct;
 })(Direction || (Direction = {}));
 //# sourceMappingURL=directionMap.js.map

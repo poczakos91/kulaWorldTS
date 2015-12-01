@@ -30,12 +30,14 @@ var Menu;
      * @param data
      */
     function createMapList(data) {
-        var mapList = data.split(',');
+        var mapList = JSON.parse(data);
         var listHolder = $("#mapList");
-        for (var i = 0; i < mapList.length; i++) {
-            var listItem = $("<div class='listItem' data='" + mapList[i] + "'>" + mapList[i] + "</div>");
-            listItem.on("click touchstart", onClickListItem);
-            listHolder.append(listItem);
+        for (var mapName in mapList) {
+            if (mapList.hasOwnProperty(mapName)) {
+                var listItem = $("<div class='listItem' data='" + mapList[mapName] + "'>" + mapList[mapName] + "</div>");
+                listItem.on("click touchstart", onClickListItem);
+                listHolder.append(listItem);
+            }
         }
     }
     Menu.createMapList = createMapList;

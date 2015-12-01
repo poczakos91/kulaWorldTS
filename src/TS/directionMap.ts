@@ -43,4 +43,10 @@ module Direction {
 
         throw "I can't make string from vector: "+dir.x+" "+dir.y+" "+dir.z;
     }
+
+    export function correct(dir: THREE.Vector3) {
+        dir.x = Math.round(dir.x);
+        dir.y = Math.round(dir.y);
+        dir.z = Math.round(dir.z);
+    }
 }

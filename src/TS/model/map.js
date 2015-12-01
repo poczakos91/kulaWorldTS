@@ -9,18 +9,21 @@ var MapModel = (function () {
     function MapModel() {
     }
     MapModel.prototype.generateModel = function (rawMap, keyHandler, cameraHandler) {
+        //initializing the array of cubes
         this.cubes = [];
-        for (var i = 0; i < rawMap.elements.length; i++) {
+        for (var i = 0, sizeI = rawMap.elements.length; i < sizeI; i++) {
+        }
+        for (var i = 0, size = rawMap.elements.length; i < size; i++) {
             for (var j = 0; j < rawMap.elements[i].length; j++) {
                 for (var k = 0; k < rawMap.elements[i][j].length; k++) {
                     var cube = rawMap.elements[i][j][k];
                     if (cube.id != undefined) {
-                        this.cubes.push(new Cube(cube.id, rawMap.cubeSize, parseInt(cube.color, 16), new THREE.Vector3(cube.position.x, cube.position.y, cube.position.z), cube.neighbours));
+                        this.cubes.push(new Cube(cube.id, rawMap.cubeSize, parseInt(cube.color, 16), new THREE.Vector3(cube.position.x, cube.position.y, cube.position.z), this));
                     }
                 }
             }
         }
-        this.winTextOrientation = rawMap.messageorientation;
+        this.winTextOrientation = rawMap.messageOrientation;
         this.target = rawMap.target;
         //coloring the target cube's target face on the map
         this.getCubeByID(this.target.id).getView().paintFace(this.target.face, 0x00ff00);
@@ -38,6 +41,19 @@ var MapModel = (function () {
                 return this.cubes[i];
         }
         throw "There is no cube with the given id: " + id;
+    };
+    MapModel.prototype.getCubeByPosition = function (x, y, z) {
+        if (x instanceof THREE.Vector3) {
+            y = x.y;
+            z = x.z;
+            x = x.x;
+        }
+        for (var i = 0, size = this.cubes.length; i < size; i++) {
+            if (this.cubes[i].position.x === x && this.cubes[i].position.y === y && this.cubes[i].position.z === z) {
+                return this.cubes[i];
+            }
+        }
+        return null;
     };
     MapModel.prototype.checkWinnerPosition = function () {
         if (this.ball.actCube.id === this.target.id && this.ball.actFace === this.target.face) {
