@@ -13,10 +13,16 @@
  */
 $(function () {
     Menu.gameBuilder = new GameBuilder();
-    Menu.mainMenu = $("#mainMenu");
     Menu.newGameButton = $("#newGameButton");
     Menu.newGameButton.on("click touchstart", Menu.onClickNewGame);
-    Remote.getMapList(Menu.createMapList);
+    $.ajax("res/templates/newGameMenu.html").done(function (data) {
+        console.log("Downloading 'mainMenu.html' DONE");
+        //adding the html template to the body
+        $('body').append(data);
+    }).fail(function (response) {
+        console.log("FAILED TO LOAD mainMenu.html TEMPLATE: ");
+        console.log(response);
+    });
 });
 var Menu;
 (function (Menu) {
@@ -25,32 +31,6 @@ var Menu;
     Menu.mainMenu;
     //reference to div element with id 'newGameButton' (the Nem Game button in the right upper corner)
     Menu.newGameButton;
-    /**
-     * Creates a list from the downloaded mapname list
-     * @param data
-     */
-    function createMapList(data) {
-        var mapList = JSON.parse(data);
-        var listHolder = $("#mapList");
-        for (var mapName in mapList) {
-            if (mapList.hasOwnProperty(mapName)) {
-                var listItem = $("<div class='listItem' data='" + mapList[mapName] + "'>" + mapList[mapName] + "</div>");
-                listItem.on("click touchstart", onClickListItem);
-                listHolder.append(listItem);
-            }
-        }
-    }
-    Menu.createMapList = createMapList;
-    /**
-     * Eventlistener function for the mapname list items in the menu
-     * @param e
-     */
-    function onClickListItem(e) {
-        Remote.loadMap(e.currentTarget.innerText, Menu.gameBuilder.startGame, Menu.gameBuilder);
-        Menu.mainMenu.hide();
-        Menu.newGameButton.show();
-    }
-    Menu.onClickListItem = onClickListItem;
     /**
      * Eventlistener function for the NewGame button in the upper right corner
      */
