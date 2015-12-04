@@ -12,49 +12,6 @@ body {
     height: 100%;
 }
 
-.menu {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    background-color: aliceblue;
-    transform: translate(-50%, -50%);
-    text-align: center;
-}
-
-#mainMenu {
-    width: 50%;
-    max-width: 400px;
-    height: 70%;
-    max-height: 500px;
-}
-
-#mapList {
-    font-family: Georgia, Times, serif;
-    font-size: 15px;
-    width: 60%;
-    height: 200px;
-    position: relative;
-    top: 26%;
-    left: 50%;
-    transform: translateX(-50%);
-    border: 1px solid #0054c0;
-    text-align: center;
-    overflow: scroll;
-    overflow-x: hidden;
-}
-
-.listItem {
-    padding-top: 5px;
-    padding-bottom: 5px;
-}
-
-.listItem:hover {
-    background-color: #0964b0;
-    color: white;
-    padding-top: 5px;
-    padding-bottom: 5px;
-}
-
 .menuButton {
     text-align: center;
     color: aliceblue;

@@ -5,46 +5,47 @@
 /// <reference path="idle.ts"/>
 /// <reference path="keyeventhandler.ts"/>
 /// <reference path="model/map.ts"/>
-/// <reference path="model/maploader.ts"/>
 /// <reference path="camera/camerahandler.ts"/>
 /// <reference path="gamebuilder.ts"/>
 /**
  * Created by poczakos on 5/1/2015.
  */
 
+module Menu {
+    export var gameBuilder:GameBuilder;
+}
 
 $(function () {
     Menu.gameBuilder = new GameBuilder();
+    //html element references
+    var newGameButton = $("#newGameButton");
+    var mainMenu;
 
-    Menu.newGameButton = $("#newGameButton");
-    Menu.newGameButton.on("click touchstart", Menu.onClickNewGame);
 
+    //loading the menu
     $.ajax("res/templates/newGameMenu.html")
-        .done(function(data) {
+        .done(function (data) {
             console.log("Downloading 'mainMenu.html' DONE");
             //adding the html template to the body
             $('body').append(data);
+
+            mainMenu = $("#mainMenu");
         })
-        .fail(function(response) {
+        .fail(function (response) {
             console.log("FAILED TO LOAD mainMenu.html TEMPLATE: ");
             console.log(response);
         });
-});
 
-
-module Menu {
-    export var gameBuilder: GameBuilder;
-    //reference to div element with id 'mainMenu' (the menu)
-    export var mainMenu: JQuery;
-    //reference to div element with id 'newGameButton' (the Nem Game button in the right upper corner)
-    export var newGameButton: JQuery;
 
     /**
      * Eventlistener function for the NewGame button in the upper right corner
      */
-    export function onClickNewGame() {
-        gameBuilder.stopGame();
+    function onClickNewGame() {
+        Menu.gameBuilder.stopGame();
         mainMenu.show();
         newGameButton.hide();
     }
-}
+
+
+    newGameButton.on("click touchstart", onClickNewGame);
+});

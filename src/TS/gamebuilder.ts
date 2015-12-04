@@ -5,7 +5,6 @@
 /// <reference path="idle.ts"/>
 /// <reference path="keyeventhandler.ts"/>
 /// <reference path="model/map.ts"/>
-/// <reference path="model/maploader.ts"/>
 /// <reference path="camera/camerahandler.ts"/>
 
 class GameBuilder {

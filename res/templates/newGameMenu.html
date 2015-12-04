@@ -51,6 +51,10 @@
 
     <script>
         (function() {
+            //html element references
+            var newGameButton = $("#newGameButton");
+            var mainMenu = $("#mainMenu");
+
             /**
              * Creates a list from the downloaded mapname list
              * @param data
@@ -73,17 +77,18 @@
              * @param e
              */
             function onClickListItem(e) {
-                loadMap(e.currentTarget.innerText, gameBuilder.startGame, gameBuilder);
+                loadMap(e.currentTarget.innerText, Menu.gameBuilder.startGame, Menu.gameBuilder);
                 hideMapList();
-                newGameButton.show();
             }
 
             function showMapList() {
-                //TODO show it and register listeners
+                mainMenu.show();
+                newGameButton.hide();
             }
 
             function hideMapList() {
-                //TODO hide it and unregister listeners
+                mainMenu.hide();
+                newGameButton.show();
             }
 
             function loadMap(mapName, callback, context) {
@@ -102,7 +107,6 @@
                 }).done(callback)
             }
 
-            Menu = Menu || {};
             Menu.showMapList = showMapList;
             Menu.hideMapList = hideMapList;
             getMapList(createMapList);
