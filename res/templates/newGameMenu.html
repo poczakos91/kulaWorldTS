@@ -1,0 +1,111 @@
+<div id="mainMenu" class="menu">
+    <style scoped>
+        .menu {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            background-color: aliceblue;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        #mainMenu {
+            width: 50%;
+            max-width: 400px;
+            height: 70%;
+            max-height: 500px;
+        }
+
+        #mapList {
+            font-family: Georgia, Times, serif;
+            font-size: 15px;
+            width: 60%;
+            height: 200px;
+            position: relative;
+            top: 26%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 1px solid #0054c0;
+            text-align: center;
+            overflow: scroll;
+            overflow-x: hidden;
+        }
+
+        .listItem {
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+
+        .listItem:hover {
+            background-color: #0964b0;
+            color: white;
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+    </style>
+
+
+    Choose a map
+    <div id="mapList"></div>
+
+
+    <script>
+        (function() {
+            /**
+             * Creates a list from the downloaded mapname list
+             * @param data
+             */
+            function createMapList(data) {
+                var mapList = JSON.parse(data);
+                var listHolder = $("#mapList");
+                for (var mapName in mapList) {
+                    if (mapList.hasOwnProperty(mapName)) {
+                        var listItem = $("<div class='listItem' data='" + mapList[mapName] + "'>" + mapList[mapName] + "</div>");
+                        listItem.on("click touchstart", onClickListItem);
+                        listHolder.append(listItem);
+                    }
+                }
+                showMapList();
+            }
+
+            /**
+             * Eventlistener function for the mapname list items in the menu
+             * @param e
+             */
+            function onClickListItem(e) {
+                loadMap(e.currentTarget.innerText, gameBuilder.startGame, gameBuilder);
+                hideMapList();
+                newGameButton.show();
+            }
+
+            function showMapList() {
+                //TODO show it and register listeners
+            }
+
+            function hideMapList() {
+                //TODO hide it and unregister listeners
+            }
+
+            function loadMap(mapName, callback, context) {
+                $.ajax({
+                    url: "src/PHP/mapLoader.php",
+                    type: "POST",
+                    data: {mapName: mapName},
+                    context: context
+                }).done(callback)
+            }
+
+            function getMapList(callback) {
+                $.ajax({
+                    url: "src/PHP/getMapList.php",
+                    type: "POST"
+                }).done(callback)
+            }
+
+            Menu = Menu || {};
+            Menu.showMapList = showMapList;
+            Menu.hideMapList = hideMapList;
+            getMapList(createMapList);
+        })();
+    </script>
+</div>
