@@ -16,8 +16,8 @@ var Idle = (function () {
         this.animationFrameID = window.requestAnimationFrame(this.onIdleWithContext);
         this.renderer.render(this.scene, this.cameraHandler.camera);
         var delta = this.clock.getDelta();
-        this.cameraHandler.update(delta);
         this.ballView.update(delta);
+        this.cameraHandler.update(delta);
     };
     Idle.prototype.removeOnIdle = function () {
         window.cancelAnimationFrame(this.animationFrameID);

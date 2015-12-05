@@ -29,7 +29,7 @@ var Ball = (function () {
                 this.actCube = this.map.getCubeByID(newCube.cubeID);
                 this.direction.faceChanged(this.actFace, (oldCube.id != this.actCube.id));
                 var newFace = Face.stringToVector(this.actFace);
-                var oldPos = oldCube.position.clone().add(oldFace.multiplyScalar(0.5 + this.view.radius));
+                var oldPos = oldCube.position.clone().add(oldFace.clone().multiplyScalar(0.5 + this.view.radius));
                 var newPos = this.actCube.position.clone().add(newFace.multiplyScalar(0.5 + this.view.radius));
                 this.view.startMove(oldPos, newPos, oldDirection, this.direction.actDirection, this.direction.rollAxis);
                 this.fpControl.startMove(oldFace, Face.stringToVector(this.actFace), newPos, this.direction.actDirection, this.view.path1Length / this.view.velocity1Length + this.view.path2Length / this.view.velocity2Length);

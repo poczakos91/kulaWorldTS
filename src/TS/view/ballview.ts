@@ -48,7 +48,6 @@ class BallView extends THREE.Mesh{
         this.rotActive = false;
         this.rotAxis = new THREE.Vector3();
 
-
         //init move tools
         this.moveActive = false;
         this.from = new THREE.Vector3();
@@ -60,7 +59,6 @@ class BallView extends THREE.Mesh{
         this.velocity2 = new THREE.Vector3();
         this.path2Active = false;
         this.path1Length = this.path2Length = this.pathLength = this.velocity1Length = this.velocity2Length = this.pathDone = 0;
-
     }
 
     setPosition(cube: Cube, face: string) {

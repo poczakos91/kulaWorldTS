@@ -28,6 +28,11 @@ var FirstPersonControl = (function () {
     }
     FirstPersonControl.prototype.addBallView = function (ballView) {
         this.ballView = ballView;
+        this.cubeViews = [];
+        this.hiddenCubes = [];
+        for (var i = 0; i < Menu.gameBuilder.map.cubes.length; i++) {
+            this.cubeViews.push(Menu.gameBuilder.map.cubes[i].view);
+        }
     };
     FirstPersonControl.prototype.startMove = function (faceFrom, faceTo, posTo, dirTo, duration) {
         this.posFrom.set(this.camera.position.x, this.camera.position.y, this.camera.position.z);
@@ -37,8 +42,6 @@ var FirstPersonControl = (function () {
         this.fullPath.subVectors(this.posTo, this.posFrom);
         this.fullPathLength = this.fullPath.length();
         this.pathDone = 0;
-        var crossVec = new THREE.Vector3();
-        crossVec.crossVectors(faceFrom, faceTo);
         this.upFrom = faceFrom;
         this.upTo = faceTo;
         this.upDistance.subVectors(this.upTo, this.upFrom);
@@ -65,11 +68,8 @@ var FirstPersonControl = (function () {
             this.camera.up = this.upTo.clone();
             this.camera.lookAt(this.ballView.position);
             this.moveActive = false;
+            this.hideCubes();
         }
-        console.log("camera's attributes during rot ");
-        console.log("pos: " + this.camera.position.x + " # " + this.camera.position.y + " # " + this.camera.position.z);
-        console.log("up: " + this.camera.up.x + " " + this.camera.up.y + " " + this.camera.up.z);
-        console.log("----------------------------------------------------");
     };
     FirstPersonControl.prototype.updateRotation = function (delta) {
         delta *= 2;
@@ -77,14 +77,25 @@ var FirstPersonControl = (function () {
         if (Math.abs(this.actRot) > Math.abs(this.fullRot)) {
             this.actRot = this.fullRot;
             this.rotActive = false;
+            this.hideCubes();
         }
         var pos = this.ballPos.clone().add(this.ballDir.clone().multiplyScalar(-3).applyAxisAngle(this.face, this.actRot).add(this.face.clone().multiplyScalar(2)));
         this.camera.position.set(pos.x, pos.y, pos.z);
         this.camera.lookAt(this.ballPos);
-        if (!this.rotActive) {
-            console.log("camera's position after rotation");
-            console.log(this.camera.position.x, this.camera.position.y, this.camera.position.z);
-            console.log(this.camera.up.x, this.camera.up.y, this.camera.up.z);
+    };
+    //TODO DELETE ME, I'm just a test shit
+    FirstPersonControl.prototype.hideCubes = function () {
+        var vec = new THREE.Vector3();
+        var rayCaster = new THREE.Raycaster(this.camera.position, vec.subVectors(this.ballView.position, this.camera.position).normalize());
+        var intersects = rayCaster.intersectObjects(this.cubeViews, false);
+        for (var i = 0; i < this.hiddenCubes.length; i++)
+            this.hiddenCubes[i].material.opacity = 1;
+        for (i = 0; i < intersects.length; i++) {
+            if (intersects[i].distance < 3.5) {
+                this.hiddenCubes.push(intersects[i].object);
+                this.hiddenCubes[this.hiddenCubes.length - 1].material.transparent = true;
+                this.hiddenCubes[this.hiddenCubes.length - 1].material.opacity = 0.1;
+            }
         }
     };
     return FirstPersonControl;

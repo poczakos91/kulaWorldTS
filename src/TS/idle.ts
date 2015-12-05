@@ -26,8 +26,8 @@ class Idle {
         this.animationFrameID = window.requestAnimationFrame(this.onIdleWithContext);
         this.renderer.render(this.scene, this.cameraHandler.camera);
         var delta = this.clock.getDelta();
-        this.cameraHandler.update(delta);
         this.ballView.update(delta);
+        this.cameraHandler.update(delta);
     }
 
     removeOnIdle(): void {

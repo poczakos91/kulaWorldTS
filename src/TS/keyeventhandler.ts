@@ -9,6 +9,12 @@ class KeyEventHandler {
     listenKeyDownsContext: any;
     listenKeyUpsContext: any;
 
+    /**
+     * Sometimes it is necessary to start a 'setTimeout' function call.
+     * This attribute store it's ID. With this the timeout call can be removed.
+     */
+    eventID: any;
+
     constructor(cameraHandler: CameraHandler) {
         this.cameraHandler = cameraHandler;
         this.pushedKeys = {forward: false, left: false, right: false, jump: false};
@@ -50,7 +56,16 @@ class KeyEventHandler {
                 this.cameraHandler.switchControl();
                 break;
             case 66:                                    //'b' just for testing
-
+                //Menu.gameBuilder.map.cubes[0].view.material.opacity = 0;
+                //Menu.gameBuilder.map.cubes[1].view.material.opacity = 0;
+                //Menu.gameBuilder.map.cubes[2].view.material.opacity = 0;
+                //Menu.gameBuilder.map.cubes[3].view.material.opacity = 0;
+                //Menu.gameBuilder.map.cubes[4].view.material.opacity = 0;
+                //Menu.gameBuilder.map.cubes[0].view.material.transparent = true;
+                //Menu.gameBuilder.map.cubes[1].view.material.transparent = true;
+                //Menu.gameBuilder.map.cubes[2].view.material.transparent = true;
+                //Menu.gameBuilder.map.cubes[3].view.material.transparent = true;
+                //Menu.gameBuilder.map.cubes[4].view.material.transparent = true;
                 break;
         }
     }
@@ -59,6 +74,7 @@ class KeyEventHandler {
         switch(e.which) {
             case 38 :                                   //FORWARD
                 this.pushedKeys.forward = false;
+                clearTimeout(this.eventID);
                 break;
             case 37 :                                   //LEFT
                 this.pushedKeys.left = false;
@@ -82,20 +98,40 @@ class KeyEventHandler {
         var body = $('body');
         body.off("keydown", this.listenKeyDownsContext);
         body.off("keyup", this.listenKeyUpsContext);
+        clearTimeout(this.eventID);
     }
 
+    /**
+     * This function is called when the ball's moving is ended. If the forward key is still pushed
+     * this function 'triggers' a new "forward key event"
+     */
     moveDone() {
         if(this.pushedKeys.forward) {
-            this.ball.move();
+            //if I don't set this to false the key eventHandler won't call the ball's move function
+            this.pushedKeys.forward = false;
+            //the keyEventHandler can't be call directly. The ball's "updateMove" function calls this
+            //function. If I would call the 'listenKeyDowns' function directly it would call the
+            //ball's startMove function directly.
+            //Tehát valami ilyesmi lenne: ball.updateMove -> keyHandler.moveDone -> keyHandler.listenKeyDowns -> ball.startMove
+            //Tehát a labda valahol önmagát hívná. Ez hazavágja az animációt. Meg kell várni, míg az ezt a függvényt
+            //hívó ball.updateMove véget ér, az idleLoop frissíti az animációkat, és csak ezután meghívni újra
+            //a listenKeyDowns függvényt.
+            this.eventID = setTimeout(this.listenKeyDowns.bind(this,{which:38}), 20);
         }
     }
 
+    /**
+     * This function is called when the ball's rotation is ended. If the left/right key is still pushed
+     * this function 'triggers' a new "left/right key event"
+     */
     rotateDone() {
-        if(this.pushedKeys.left) {
-            this.ball.rotate(Math.PI/2);
-        }
-        else if(this.pushedKeys.right) {
-            this.ball.rotate(-Math.PI/2);
+        if(this.pushedKeys.left) this.pushedKeys.left = false;
+        else if(this.pushedKeys.right) this.pushedKeys.right = false;
+        else if (this.pushedKeys.forward) {
+            //ha már a forgás befejezése előtt megnyomta a user az előrét, akkor a forgás befejeztekor nem indul el
+            //előre a labda. Ezért triggereljük a listenKeyDowns függvényt a feljebb látott módon.
+            this.eventID = setTimeout(this.listenKeyDowns.bind(this,{which:38}), 20);
+            this.pushedKeys.forward = false;
         }
     }
 }

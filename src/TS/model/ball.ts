@@ -40,7 +40,7 @@ class Ball {
                 this.direction.faceChanged(this.actFace, (oldCube.id != this.actCube.id));
 
                 var newFace: THREE.Vector3 = Face.stringToVector(this.actFace);
-                var oldPos: THREE.Vector3 = oldCube.position.clone().add(oldFace.multiplyScalar(0.5+this.view.radius));
+                var oldPos: THREE.Vector3 = oldCube.position.clone().add(oldFace.clone().multiplyScalar(0.5+this.view.radius));
                 var newPos: THREE.Vector3 = this.actCube.position.clone().add(newFace.multiplyScalar(0.5+this.view.radius));
 
                 this.view.startMove(

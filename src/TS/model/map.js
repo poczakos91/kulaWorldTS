@@ -57,21 +57,28 @@ var MapModel = (function () {
     };
     MapModel.prototype.checkWinnerPosition = function () {
         if (this.ball.actCube.id === this.target.id && this.ball.actFace === this.target.face) {
-            Menu.gameBuilder.gameSucceeded();
-            var options = {
-                size: this.winTextOrientation.size,
-                height: 0.2,
-                weight: "normal",
-                bevelEnabled: false,
-                curveSegments: 12,
-                font: "helvetiker"
-            };
-            var geom = new THREE.TextGeometry("You win", options);
-            var mat = new THREE.MeshPhongMaterial({ specular: 0xffffff, color: 0x33bb33, shininess: 100, metal: true });
-            var youWin = THREE.SceneUtils.createMultiMaterialObject(geom, [mat]);
-            youWin.position.set(this.winTextOrientation.position.x, this.winTextOrientation.position.y, this.winTextOrientation.position.z);
-            youWin.rotation.set(this.winTextOrientation.rotation.x * Math.PI, this.winTextOrientation.rotation.y * Math.PI, this.winTextOrientation.rotation.z * Math.PI);
-            this.view.add(youWin);
+            setTimeout(function () {
+                Menu.gameBuilder.gameSucceeded();
+                var options = {
+                    size: this.winTextOrientation.size,
+                    height: 0.2,
+                    weight: "normal",
+                    bevelEnabled: false,
+                    curveSegments: 12,
+                    font: "helvetiker"
+                };
+                var geom = new THREE.TextGeometry("You win", options);
+                var mat = new THREE.MeshPhongMaterial({
+                    specular: 0xffffff,
+                    color: 0x33bb33,
+                    shininess: 100,
+                    metal: true
+                });
+                var youWin = THREE.SceneUtils.createMultiMaterialObject(geom, [mat]);
+                youWin.position.set(this.winTextOrientation.position.x, this.winTextOrientation.position.y, this.winTextOrientation.position.z);
+                youWin.rotation.set(this.winTextOrientation.rotation.x * Math.PI, this.winTextOrientation.rotation.y * Math.PI, this.winTextOrientation.rotation.z * Math.PI);
+                this.view.add(youWin);
+            }.bind(this), 100);
             return false;
         }
         return true;
