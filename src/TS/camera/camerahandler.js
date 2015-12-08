@@ -5,7 +5,7 @@
 /// <reference path="../faceMap.ts"/>
 var CameraHandler = (function () {
     function CameraHandler() {
-        this.camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 1.5, 2000);
+        this.camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 1, 2000);
         this.camera.position.set(-7, 7, -10);
         this.camera.lookAt(new THREE.Vector3(0, 1, 0));
         this.tbControl = new THREE.TrackballControls(this.camera);
@@ -43,7 +43,7 @@ var CameraHandler = (function () {
     CameraHandler.prototype.changeToFirstPersonControl = function () {
         var ballPos = this.ball.view.position.clone();
         var ballDir = this.ball.direction.actDirection.clone();
-        var actFace = Face.stringToVector(this.ball.actFace);
+        var actFace = this.ball.actFace.clone();
         var camPos = ballPos.clone().sub(ballDir.multiplyScalar(3)).add(actFace.clone().multiplyScalar(2));
         this.camera.position.set(camPos.x, camPos.y, camPos.z);
         this.camera.up.set(actFace.x, actFace.y, actFace.z);
@@ -58,6 +58,8 @@ var CameraHandler = (function () {
                 this.fpControl.updateMove(delta);
             if (this.fpControl.rotActive)
                 this.fpControl.updateRotation(delta);
+            if (this.fpControl.jumpActive)
+                this.fpControl.updateJump();
         }
     };
     return CameraHandler;

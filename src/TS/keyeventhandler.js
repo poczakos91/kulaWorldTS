@@ -34,6 +34,11 @@ var KeyEventHandler = (function () {
             case 32:
                 if (!this.pushedKeys.jump) {
                     this.pushedKeys.jump = true;
+                    if (this.ball.view.isMoveAnimActive() || (!this.ball.view.isRotAnimActive() && this.pushedKeys.forward)) {
+                        this.ball.jumpForward();
+                    }
+                    else
+                        this.ball.jumpUp();
                 }
                 break;
             case 83:

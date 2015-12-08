@@ -30,6 +30,10 @@ class FirstPersonControl {
     upTo: THREE.Vector3;
     upDistance: THREE.Vector3;
 
+    //attributes to jump the camera
+    jumpActive: boolean;
+    prevCamPos: THREE.Vector3;
+
 
     cubeViews: THREE.Mesh[];
     hiddenCubes: THREE.Mesh[];
@@ -61,6 +65,9 @@ class FirstPersonControl {
         this.upFrom = new THREE.Vector3();
         this.upTo = new THREE.Vector3();
         this.upDistance = new THREE.Vector3();
+
+        //init jump attributes
+        this.jumpActive = false;
     }
 
     addBallView(ballView: BallView) {
@@ -99,6 +106,11 @@ class FirstPersonControl {
         this.rotActive = true;
     }
 
+    startJump() {
+        this.prevCamPos = this.ballView.position.clone();
+        this.jumpActive = true;
+    }
+
     updateMove(delta: number): void {
         if(this.pathDone + this.velocityLength*delta < this.fullPathLength) {
             this.pathDone += this.velocityLength*delta;
@@ -129,7 +141,18 @@ class FirstPersonControl {
         this.camera.lookAt(this.ballPos);
     }
 
-    //TODO DELETE ME, I'm just a test shit
+    updateJump() {
+        var newCamPos = this.ballView.position.clone();
+        var cameraOffset = newCamPos.clone().sub(this.prevCamPos);
+        if(cameraOffset.lengthSq() > 0) {
+            this.camera.position.add(cameraOffset);
+            this.prevCamPos = newCamPos;
+        }
+        else {
+            this.jumpActive = false;
+        }
+    }
+
     hideCubes():void {
         var vec:THREE.Vector3 = new THREE.Vector3();
         var rayCaster: THREE.Raycaster = new THREE.Raycaster(this.camera.position, vec.subVectors(this.ballView.position,this.camera.position).normalize());
@@ -142,5 +165,9 @@ class FirstPersonControl {
                 this.hiddenCubes[this.hiddenCubes.length-1].material.opacity = 0.1;
             }
         }
+    }
+
+    stopMoveAnimation() {
+        this.moveActive = false;
     }
 }

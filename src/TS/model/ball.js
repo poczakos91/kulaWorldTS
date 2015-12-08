@@ -6,11 +6,12 @@
 /// <reference path="../directionMap.ts"/>
 /// <reference path="../camera/controls/firstpersoncontrol.ts"/>
 var Ball = (function () {
-    function Ball(startingCube, startingFace, startingDirection, map, fpControl) {
+    function Ball(startingCube, startingFace, startingDirection, /* map: MapModel,*/ fpControl) {
         this.actCube = startingCube;
-        this.actFace = startingFace;
+        this.actFace = Face.v[startingFace];
+        this.prevFace = Face.v[startingFace];
         this.direction = new DirectionHandler(startingFace, startingDirection);
-        this.map = map;
+        //this.map = map;
         this.fpControl = fpControl;
     }
     Ball.prototype.setView = function (view) {
@@ -23,19 +24,54 @@ var Ball = (function () {
             var oldDirection = this.direction.actDirection.clone();
             var newCube = this.actCube.moveRequest(this.actFace, oldDirection);
             if (newCube) {
-                var oldFace = Face.stringToVector(this.actFace);
+                this.prevFace = this.actFace.clone();
                 this.actFace = newCube.toFace;
-                var oldCube = this.actCube;
-                this.actCube = this.map.getCubeByID(newCube.cubeID);
-                this.direction.faceChanged(this.actFace, (oldCube.id != this.actCube.id));
-                var newFace = Face.stringToVector(this.actFace);
-                var oldPos = oldCube.position.clone().add(oldFace.clone().multiplyScalar(0.5 + this.view.radius));
+                this.prevCube = this.actCube;
+                this.actCube = newCube.object;
+                this.direction.faceChanged(this.actFace, (this.prevCube.id != this.actCube.id));
+                var newFace = this.actFace.clone();
+                var oldPos = this.prevCube.position.clone().add(this.prevFace.clone().multiplyScalar(0.5 + this.view.radius));
                 var newPos = this.actCube.position.clone().add(newFace.multiplyScalar(0.5 + this.view.radius));
                 this.view.startMove(oldPos, newPos, oldDirection, this.direction.actDirection, this.direction.rollAxis);
-                this.fpControl.startMove(oldFace, Face.stringToVector(this.actFace), newPos, this.direction.actDirection, this.view.path1Length / this.view.velocity1Length + this.view.path2Length / this.view.velocity2Length);
+                this.fpControl.startMove(this.prevFace, this.actFace.clone(), newPos, this.direction.actDirection, this.view.path1Length / this.view.velocity1Length + this.view.path2Length / this.view.velocity2Length);
             }
             else {
                 console.log("There's no possible place to move");
+            }
+        }
+    };
+    /**
+     * Just some fancy stuff. This will be called when the user pushes jump(space) button but doesn't pushes forward.
+     */
+    Ball.prototype.jumpUp = function () {
+        //TODO need some jump anim from (actCube actFace) to (actCube actFace)
+    };
+    /**
+     * The real jump.
+     */
+    Ball.prototype.jumpForward = function () {
+        //the jump action is OK if:
+        //  1. the ball rolls between two cubes on the same faces (from (cube A face x) to (cube B face x)) or
+        //  2. the ball rolls between one cube's faces (from (cube A face x) to (cube A face y)) and it is still on the first face
+        if (this.prevFace.equals(this.actFace) || (this.view.isMoveAnimActive() && !this.view.path2Active)) {
+            var newCube;
+            if (this.view.isMoveAnimActive()) {
+                newCube = this.prevCube.jumpRequest(this.prevFace, this.direction.prevDirection);
+            }
+            else {
+                newCube = this.actCube.jumpRequest(this.actFace, this.direction.actDirection);
+            }
+            if (newCube) {
+                if (this.view.isMoveAnimActive())
+                    this.direction.actDirection = this.direction.prevDirection;
+                this.view.stopMoveAnimation();
+                this.fpControl.stopMoveAnimation();
+                this.actCube = newCube;
+                var newPos = this.actCube.position.clone().add(this.prevFace.clone().multiplyScalar(0.5 + this.view.radius));
+                this.direction.actFace = this.prevFace;
+                this.actFace = this.prevFace;
+                this.view.startJump(newPos, this.direction.actDirection, this.actFace);
+                this.fpControl.startJump();
             }
         }
     };
@@ -44,8 +80,8 @@ var Ball = (function () {
             var oldDir = this.direction.actDirection.clone();
             this.direction.rotateDirection(angle);
             this.direction.calculateRollAxis();
-            this.view.startRotate(Face.stringToVector(this.actFace), angle);
-            this.fpControl.startRotation(angle, this.view.position, oldDir, Face.stringToVector(this.actFace));
+            this.view.startRotate(this.actFace, angle);
+            this.fpControl.startRotation(angle, this.view.position, oldDir, this.actFace);
         }
     };
     return Ball;

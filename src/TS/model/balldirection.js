@@ -14,18 +14,17 @@ var DirectionHandler = (function () {
      * @param isOtherCube - true if the this.actFace and toFace are on different cubes, false otherwise
      */
     DirectionHandler.prototype.faceChanged = function (toFace, isOtherCube) {
-        //getting vector from string
-        var newFace = Face.stringToVector(toFace);
+        this.prevDirection = this.actDirection.clone();
         //if the faces are the same, there's no direction change
-        if (!this.actFace.equals(newFace)) {
+        if (!this.actFace.equals(toFace)) {
             //if the faceChange is between two different cubes, than the previous face vector will be the direction
             if (isOtherCube) {
                 this.actDirection.set(this.actFace.x, this.actFace.y, this.actFace.z);
-                this.actFace.set(newFace.x, newFace.y, newFace.z);
+                this.actFace.set(toFace.x, toFace.y, toFace.z);
             }
             else {
                 this.actDirection.set(-this.actFace.x, -this.actFace.y, -this.actFace.z);
-                this.actFace.set(newFace.x, newFace.y, newFace.z);
+                this.actFace.set(toFace.x, toFace.y, toFace.z);
             }
         }
     };

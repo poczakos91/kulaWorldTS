@@ -17,7 +17,7 @@ var BallView = (function (_super) {
         var texture = THREE.ImageUtils.loadTexture(textureURL);
         texture.minFilter = THREE.LinearFilter;
         _super.call(this, new THREE.SphereGeometry(radius, 20, 20), new THREE.MeshPhongMaterial({ map: texture }));
-        this.speed = 4;
+        this.moveSpeed = 4;
         //init rotation tools
         this.rotActive = false;
         this.rotAxis = new THREE.Vector3();
@@ -32,10 +32,15 @@ var BallView = (function (_super) {
         this.velocity2 = new THREE.Vector3();
         this.path2Active = false;
         this.path1Length = this.path2Length = this.pathLength = this.velocity1Length = this.velocity2Length = this.pathDone = 0;
+        //init jump tools
+        this.jumpActive = false;
+        this.gravityStrength = 30;
+        this.jumpHeight = 1;
+        this.jumpVelocity = new THREE.Vector3();
     }
     BallView.prototype.setPosition = function (cube, face) {
         var newPos = cube.position.clone();
-        newPos.add(Face.stringToVector(face).multiplyScalar(0.5 + this.radius));
+        newPos.add(face.clone().multiplyScalar(0.5 + this.radius));
         this.position.set(newPos.x, newPos.y, newPos.z);
     };
     BallView.prototype.startMove = function (oldPos, newPos, oldDirection, newDirection, rollAxis) {
@@ -68,9 +73,9 @@ var BallView = (function (_super) {
         this.path2Length = this.path2.length();
         this.pathLength = this.path1Length + this.path2Length;
         this.path2Active = false;
-        this.velocity1 = ballDirFrom.clone().multiplyScalar(this.speed);
+        this.velocity1 = ballDirFrom.clone().multiplyScalar(this.moveSpeed);
         this.velocity1Length = this.velocity1.length();
-        this.velocity2 = ballDirTo.clone().multiplyScalar(this.speed);
+        this.velocity2 = ballDirTo.clone().multiplyScalar(this.moveSpeed);
         this.velocity2Length = this.velocity2.length();
         this.pathDone = 0;
         this.moveActive = true;
@@ -81,11 +86,55 @@ var BallView = (function (_super) {
         this.actRotAngle = 0;
         this.rotActive = true;
     };
+    BallView.prototype.startJump = function (targetPos, viewDir, jumpDir) {
+        this.jumpTargetPos = targetPos.clone();
+        this.gravityDirection = jumpDir.clone().multiplyScalar(-1);
+        var jumpUpVelocity, jumpForwardVelocity;
+        //kiszámolom a labda kezdősebességének azt a részét, ami a felemelkedéshez kell
+        jumpUpVelocity = Math.sqrt(2 * this.gravityStrength * this.jumpHeight);
+        //kiszámolom úthossz (viewDir.getComponent(i) !== null) komponensének azon részét, amit a labda az ugrásának legmagasabb pontjától a földetérésig megtesz (jumpDistanceY2)
+        var jumpDistanceY2;
+        for (var i = 0; i < 3; i++) {
+            if (viewDir.getComponent(i)) {
+                var helperVector = new THREE.Vector3();
+                helperVector.setComponent(i, targetPos.getComponent(i) - this.position.getComponent(i));
+                jumpDistanceY2 = this.position.clone().add(helperVector).sub(targetPos).length() + this.jumpHeight;
+                break;
+            }
+        }
+        //a korában kiszámolt adatok birtokában már tudom, hogy meddig fog tartani az ugrás
+        this.jumpDuration = jumpUpVelocity / this.gravityStrength + Math.sqrt(2 * jumpDistanceY2 / this.gravityStrength);
+        for (i = 0; i < 3; i++) {
+            if (viewDir.getComponent(i)) {
+                jumpForwardVelocity = Math.abs(targetPos.getComponent(i) - this.position.getComponent(i)) / this.jumpDuration;
+                break;
+            }
+        }
+        this.jumpVelocity = jumpDir.clone().multiplyScalar(jumpUpVelocity).add(viewDir.clone().multiplyScalar(jumpForwardVelocity));
+        this.jumpActive = true;
+        this.jumpDurationCtr = 0;
+    };
+    BallView.prototype.updateJump = function (delta) {
+        if (this.jumpDurationCtr + delta < this.jumpDuration) {
+            this.position.add(this.jumpVelocity.clone().multiplyScalar(delta));
+            this.jumpVelocity.add(this.gravityDirection.clone().multiplyScalar(this.gravityStrength * delta));
+            this.jumpDurationCtr += delta;
+        }
+        else {
+            this.position.set(this.jumpTargetPos.x, this.jumpTargetPos.y, this.jumpTargetPos.z);
+            this.jumpActive = false;
+            if (this.map.checkWinnerPosition()) {
+                this.keyHandler.moveDone();
+            }
+        }
+    };
     BallView.prototype.update = function (delta) {
         if (this.rotActive)
             this.updateRotation(delta);
         if (this.moveActive)
             this.updateMove(delta);
+        if (this.jumpActive)
+            this.updateJump(delta);
     };
     BallView.prototype.updateRotation = function (delta) {
         var rotDelta = this.fullRotAngle * delta * 2;
@@ -136,12 +185,21 @@ var BallView = (function (_super) {
     BallView.prototype.isAnimActive = function () {
         return (this.moveActive || this.rotActive);
     };
+    BallView.prototype.isMoveAnimActive = function () {
+        return this.moveActive;
+    };
+    BallView.prototype.isRotAnimActive = function () {
+        return this.rotActive;
+    };
     BallView.prototype.rotateAroundWorldAxis = function (axis, angle) {
         this.rotWorldMatrix = new THREE.Matrix4();
         this.rotWorldMatrix.makeRotationAxis(axis, angle);
         this.rotWorldMatrix.multiply(this.matrix);
         this.matrix = this.rotWorldMatrix;
         this.rotation.setFromRotationMatrix(this.matrix);
+    };
+    BallView.prototype.stopMoveAnimation = function () {
+        this.moveActive = false;
     };
     return BallView;
 })(THREE.Mesh);

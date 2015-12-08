@@ -32,7 +32,17 @@ class BallView extends THREE.Mesh{
     rollAxis: THREE.Vector3;
     pathDone: number;
 
-    speed: number;
+    moveSpeed: number;
+
+    //attributes needed to jump with the ball
+    jumpActive: boolean;
+    gravityStrength: number;
+    gravityDirection: THREE.Vector3;
+    jumpVelocity: THREE.Vector3;
+    jumpTargetPos: THREE.Vector3;
+    jumpHeight: number;
+    jumpDuration: number;
+    jumpDurationCtr: number;
 
 
     constructor(radius: number, textureURL: string, keyHandler: KeyEventHandler, map: MapModel) {
@@ -42,7 +52,7 @@ class BallView extends THREE.Mesh{
         var texture = THREE.ImageUtils.loadTexture(textureURL);
         texture.minFilter = THREE.LinearFilter;
         super(new THREE.SphereGeometry(radius,20,20), new THREE.MeshPhongMaterial({map: texture}));
-        this.speed = 4;
+        this.moveSpeed = 4;
 
         //init rotation tools
         this.rotActive = false;
@@ -59,11 +69,17 @@ class BallView extends THREE.Mesh{
         this.velocity2 = new THREE.Vector3();
         this.path2Active = false;
         this.path1Length = this.path2Length = this.pathLength = this.velocity1Length = this.velocity2Length = this.pathDone = 0;
+
+        //init jump tools
+        this.jumpActive = false;
+        this.gravityStrength = 30;
+        this.jumpHeight = 1;
+        this.jumpVelocity = new THREE.Vector3();
     }
 
-    setPosition(cube: Cube, face: string) {
+    setPosition(cube: Cube, face: THREE.Vector3) {
         var newPos = cube.position.clone();
-        newPos.add(Face.stringToVector(face).multiplyScalar(0.5+this.radius));
+        newPos.add(face.clone().multiplyScalar(0.5+this.radius));
         this.position.set(newPos.x, newPos.y, newPos.z);
     }
 
@@ -100,9 +116,9 @@ class BallView extends THREE.Mesh{
         this.pathLength = this.path1Length + this.path2Length;
         this.path2Active = false;
 
-        this.velocity1 = ballDirFrom.clone().multiplyScalar(this.speed);
+        this.velocity1 = ballDirFrom.clone().multiplyScalar(this.moveSpeed);
         this.velocity1Length = this.velocity1.length();
-        this.velocity2 = ballDirTo.clone().multiplyScalar(this.speed);
+        this.velocity2 = ballDirTo.clone().multiplyScalar(this.moveSpeed);
         this.velocity2Length = this.velocity2.length();
 
         this.pathDone = 0;
@@ -116,9 +132,61 @@ class BallView extends THREE.Mesh{
         this.rotActive = true;
     }
 
+    startJump(targetPos: THREE.Vector3, viewDir: THREE.Vector3, jumpDir: THREE.Vector3) {
+        this.jumpTargetPos = targetPos.clone();
+        this.gravityDirection = jumpDir.clone().multiplyScalar(-1);
+
+        var jumpUpVelocity, jumpForwardVelocity;
+
+        //kiszámolom a labda kezdősebességének azt a részét, ami a felemelkedéshez kell
+        jumpUpVelocity = Math.sqrt(2*this.gravityStrength*this.jumpHeight);
+
+        //kiszámolom úthossz (viewDir.getComponent(i) !== null) komponensének azon részét, amit a labda az ugrásának legmagasabb pontjától a földetérésig megtesz (jumpDistanceY2)
+        var jumpDistanceY2;
+        for(var i=0;i<3;i++) {
+            if(viewDir.getComponent(i)) {
+                var helperVector: THREE.Vector3 = new THREE.Vector3();
+                helperVector.setComponent(i, targetPos.getComponent(i)-this.position.getComponent(i));
+                jumpDistanceY2 = this.position.clone().add(helperVector).sub(targetPos).length()+this.jumpHeight;
+                break;
+            }
+        }
+        //a korában kiszámolt adatok birtokában már tudom, hogy meddig fog tartani az ugrás
+        this.jumpDuration = jumpUpVelocity/this.gravityStrength + Math.sqrt(2*jumpDistanceY2/this.gravityStrength);
+
+        //és ebből már megkapom a labda (viewDir.getComponenet(i) !== null) komponensének értékét is
+        for(i=0;i<3;i++) {
+            if(viewDir.getComponent(i)) {
+                jumpForwardVelocity = Math.abs(targetPos.getComponent(i) - this.position.getComponent(i))/this.jumpDuration;
+                break;
+            }
+        }
+
+        this.jumpVelocity = jumpDir.clone().multiplyScalar(jumpUpVelocity).add(viewDir.clone().multiplyScalar(jumpForwardVelocity));
+
+        this.jumpActive = true;
+        this.jumpDurationCtr = 0;
+    }
+
+    updateJump(delta: number) {
+        if(this.jumpDurationCtr + delta < this.jumpDuration) {
+            this.position.add(this.jumpVelocity.clone().multiplyScalar(delta));
+            this.jumpVelocity.add(this.gravityDirection.clone().multiplyScalar(this.gravityStrength * delta));
+            this.jumpDurationCtr += delta;
+        }
+        else {
+            this.position.set(this.jumpTargetPos.x, this.jumpTargetPos.y, this.jumpTargetPos.z);
+            this.jumpActive = false;
+            if (this.map.checkWinnerPosition()) {
+                this.keyHandler.moveDone();
+            }
+        }
+    }
+
     update(delta: number) {
         if(this.rotActive) this.updateRotation(delta);
         if(this.moveActive) this.updateMove(delta);
+        if(this.jumpActive) this.updateJump(delta);
     }
 
     updateRotation(delta: number) {
@@ -176,6 +244,14 @@ class BallView extends THREE.Mesh{
         return (this.moveActive || this.rotActive);
     }
 
+    isMoveAnimActive(): boolean {
+        return this.moveActive;
+    }
+
+    isRotAnimActive(): boolean {
+        return this.rotActive;
+    }
+
     rotateAroundWorldAxis(axis: THREE.Vector3, angle: number) {
         this.rotWorldMatrix = new THREE.Matrix4();
         this.rotWorldMatrix.makeRotationAxis(axis, angle);
@@ -183,4 +259,9 @@ class BallView extends THREE.Mesh{
         this.matrix = this.rotWorldMatrix;
         this.rotation.setFromRotationMatrix(this.matrix);
     }
+
+    stopMoveAnimation() {
+        this.moveActive = false;
+    }
+
 }

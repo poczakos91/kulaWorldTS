@@ -25,6 +25,8 @@ var FirstPersonControl = (function () {
         this.upFrom = new THREE.Vector3();
         this.upTo = new THREE.Vector3();
         this.upDistance = new THREE.Vector3();
+        //init jump attributes
+        this.jumpActive = false;
     }
     FirstPersonControl.prototype.addBallView = function (ballView) {
         this.ballView = ballView;
@@ -55,6 +57,10 @@ var FirstPersonControl = (function () {
         this.actRot = 0;
         this.rotActive = true;
     };
+    FirstPersonControl.prototype.startJump = function () {
+        this.prevCamPos = this.ballView.position.clone();
+        this.jumpActive = true;
+    };
     FirstPersonControl.prototype.updateMove = function (delta) {
         if (this.pathDone + this.velocityLength * delta < this.fullPathLength) {
             this.pathDone += this.velocityLength * delta;
@@ -83,7 +89,17 @@ var FirstPersonControl = (function () {
         this.camera.position.set(pos.x, pos.y, pos.z);
         this.camera.lookAt(this.ballPos);
     };
-    //TODO DELETE ME, I'm just a test shit
+    FirstPersonControl.prototype.updateJump = function () {
+        var newCamPos = this.ballView.position.clone();
+        var cameraOffset = newCamPos.clone().sub(this.prevCamPos);
+        if (cameraOffset.lengthSq() > 0) {
+            this.camera.position.add(cameraOffset);
+            this.prevCamPos = newCamPos;
+        }
+        else {
+            this.jumpActive = false;
+        }
+    };
     FirstPersonControl.prototype.hideCubes = function () {
         var vec = new THREE.Vector3();
         var rayCaster = new THREE.Raycaster(this.camera.position, vec.subVectors(this.ballView.position, this.camera.position).normalize());
@@ -97,6 +113,9 @@ var FirstPersonControl = (function () {
                 this.hiddenCubes[this.hiddenCubes.length - 1].material.opacity = 0.1;
             }
         }
+    };
+    FirstPersonControl.prototype.stopMoveAnimation = function () {
+        this.moveActive = false;
     };
     return FirstPersonControl;
 })();

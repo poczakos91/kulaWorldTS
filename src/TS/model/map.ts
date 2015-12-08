@@ -53,7 +53,6 @@ class MapModel {
             this.getCubeByID(rawMap.ball.startingCube),
             rawMap.ball.startingFace,
             rawMap.ball.startingDirection,
-            this,
             cameraHandler.fpControl
         );
         var ballView: BallView = new BallView(0.3,rawMap.ball.texture.colorMapURL,keyHandler, this);
@@ -87,8 +86,26 @@ class MapModel {
         return null;
     }
 
+    /**
+     * Returns the cubes those have two same coordinates (dimValue1, dimValue2).
+     * Dimension indexes can be 0 (x dimension), 1 (y dimension), 2 (z dimension)
+     * @param dimIndex1 - first dimension index
+     * @param dimValue1 - the coordinate the belongs to dimIndex1 dimension
+     * @param dimIndex2 - second dimension index
+     * @param dimValue2 - the coordinate the belongs to dimIndex2 dimension
+     */
+    getCubesFromALine(dimIndex1: number, dimValue1: number, dimIndex2: number, dimValue2: number): Cube[] {
+        var cubes: Cube[] = [];
+        for(var i=0, size=this.cubes.length;i<size;i++) {
+            if(this.cubes[i].position.getComponent(dimIndex1) === dimValue1 && this.cubes[i].position.getComponent(dimIndex2) === dimValue2) {
+                cubes.push(this.cubes[i]);
+            }
+        }
+        return cubes;
+    }
+
     checkWinnerPosition(): boolean {
-        if(this.ball.actCube.id === this.target.id && this.ball.actFace === this.target.face) {
+        if(this.ball.actCube.id === this.target.id && Face.vectorToString(this.ball.actFace) === this.target.face) {
             setTimeout(function() {
                 Menu.gameBuilder.gameSucceeded();
                 var options:THREE.TextGeometryParameters = {

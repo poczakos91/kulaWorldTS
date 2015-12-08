@@ -49,23 +49,17 @@ class KeyEventHandler {
             case 32 :                                   //JUMP (space)
                 if(!this.pushedKeys.jump) {
                     this.pushedKeys.jump = true;
-                    //TODO jump implementation
+                    if(this.ball.view.isMoveAnimActive() || (!this.ball.view.isRotAnimActive() && this.pushedKeys.forward)) {
+                        this.ball.jumpForward();
+                    }
+                    else this.ball.jumpUp();
                 }
                 break;
             case 83:                                    //'s' SWITCH CAMERA
                 this.cameraHandler.switchControl();
                 break;
             case 66:                                    //'b' just for testing
-                //Menu.gameBuilder.map.cubes[0].view.material.opacity = 0;
-                //Menu.gameBuilder.map.cubes[1].view.material.opacity = 0;
-                //Menu.gameBuilder.map.cubes[2].view.material.opacity = 0;
-                //Menu.gameBuilder.map.cubes[3].view.material.opacity = 0;
-                //Menu.gameBuilder.map.cubes[4].view.material.opacity = 0;
-                //Menu.gameBuilder.map.cubes[0].view.material.transparent = true;
-                //Menu.gameBuilder.map.cubes[1].view.material.transparent = true;
-                //Menu.gameBuilder.map.cubes[2].view.material.transparent = true;
-                //Menu.gameBuilder.map.cubes[3].view.material.transparent = true;
-                //Menu.gameBuilder.map.cubes[4].view.material.transparent = true;
+
                 break;
         }
     }
