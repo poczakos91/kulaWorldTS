@@ -241,7 +241,7 @@ class BallView extends THREE.Mesh{
     }
 
     isAnimActive(): boolean {
-        return (this.moveActive || this.rotActive);
+        return (this.moveActive || this.rotActive || this.jumpActive);
     }
 
     isMoveAnimActive(): boolean {

@@ -183,7 +183,7 @@ var BallView = (function (_super) {
         this.rotateAroundWorldAxis(this.rollAxis, length / (2 * this.radius));
     };
     BallView.prototype.isAnimActive = function () {
-        return (this.moveActive || this.rotActive);
+        return (this.moveActive || this.rotActive || this.jumpActive);
     };
     BallView.prototype.isMoveAnimActive = function () {
         return this.moveActive;
