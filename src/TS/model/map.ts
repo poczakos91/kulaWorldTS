@@ -48,9 +48,6 @@ class MapModel {
         this.gameEndTextOrientation = rawMap.messageOrientation;
         this.target = rawMap.target;
 
-        //coloring the target cube's target face on the map
-        this.getCubeByID(this.target.id).getView().paintFace(this.target.face, 0xff2800);
-
         this.view = new MapView();
         this.view.appendChildrenFromModel(this.cubes);
         this.view.position.set(0,0,0);
@@ -63,6 +60,38 @@ class MapModel {
         var ballView: BallView = new BallView(0.3,rawMap.ball.texture.colorMapURL,keyHandler, this);
         this.view.add(ballView);
         this.ball.setView(ballView);
+
+        //coloring the target cube's target face on the map
+        var targetCube = this.getCubeByID(this.target.id);
+        targetCube.getView().paintFace(this.target.face, 0xff2800);
+        var options:THREE.TextGeometryParameters = {
+            size: 0.3,
+            height: 0.1,
+            weight: "normal",
+            bevelEnabled: false,
+            curveSegments: 12,
+            font: "helvetiker"
+        };
+        var geom = new THREE.TextGeometry("EXIT", options);
+        geom.applyMatrix( new THREE.Matrix4().makeTranslation(-0.4,0,0) );
+        var mat = new THREE.MeshPhongMaterial({
+            metal: false,
+            color: 0xff2800,
+            transparent: true,
+            opacity: 0.4,
+        });
+        var exitSign = THREE.SceneUtils.createMultiMaterialObject(geom, [mat]);
+        exitSign.position.add(Face.v[this.target.face].clone().multiplyScalar(0.6));
+        switch (this.target.face) {
+            case Face.s.bottom : exitSign.rotateX(Math.PI); break;
+            case Face.s.rear : exitSign.rotateX(-Math.PI/2); break;
+            case Face.s.front : exitSign.rotateX(Math.PI/2); break;
+            case Face.s.left : exitSign.rotateZ(-Math.PI/2); break;
+            case Face.s.right : exitSign.rotateZ(Math.PI/2); break;
+        }
+        targetCube.view.add(exitSign);
+        targetCube.view.objects.push({name: "exit", onFace: Face.v[this.target.face], object: exitSign});
+
 
         this.keysLeft = 0;
         for(var i=0;i<this.cubes.length;i++) {
@@ -135,8 +164,15 @@ class MapModel {
                 actCube.keys.splice(i,1);
                 actCube.view.removeObject(actFace);
                 this.keysLeft--;
-                if(this.keysLeft == 0)
-                    this.getCubeByID(this.target.id).getView().paintFace(this.target.face, 0x00ff00);
+                if(this.keysLeft == 0) {
+                    var targetCube = this.getCubeByID(this.target.id);
+                    targetCube.getView().paintFace(this.target.face, 0x00ff00);
+                    for(var i=0;i<targetCube.view.objects.length;i++) {
+                        if(targetCube.view.objects[i].name === "exit") {
+                            (<THREE.MeshPhongMaterial>(<THREE.Mesh>targetCube.view.objects[i].object.children[0]).material).color.setHex(0x00ff00);
+                        }
+                    }
+                }
                 return;
             }
         }
@@ -161,8 +197,8 @@ class MapModel {
     }
 
     showEndMessage(text: string, color: number) {
+        Menu.gameBuilder.gameSucceeded();
         setTimeout(function() {
-            Menu.gameBuilder.gameSucceeded();
             var options:THREE.TextGeometryParameters = {
                 size: this.gameEndTextOrientation.size,
                 height: 0.2,
@@ -183,5 +219,6 @@ class MapModel {
             youWin.rotation.set(this.gameEndTextOrientation.rotation.x * Math.PI, this.gameEndTextOrientation.rotation.y * Math.PI, this.gameEndTextOrientation.rotation.z * Math.PI);
             this.view.add(youWin);
         }.bind(this),100);
+
     }
 }

@@ -44,7 +44,6 @@ var Ball = (function () {
      * Just some fancy stuff. This will be called when the user pushes jump(space) button but doesn't pushes forward.
      */
     Ball.prototype.jumpUp = function () {
-        //TODO need some jump anim from (actCube actFace) to (actCube actFace)
         this.view.startJumpUp(this.actFace);
         this.fpControl.startJump();
         this.prevFace = this.actFace.clone();

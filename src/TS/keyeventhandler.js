@@ -77,6 +77,8 @@ var KeyEventHandler = (function () {
         var body = $('body');
         body.off("keydown", this.listenKeyDownsContext);
         body.off("keyup", this.listenKeyUpsContext);
+        this.pushedKeys.forward = false;
+        this.pushedKeys.jump = false;
         clearTimeout(this.eventID);
     };
     /**
