@@ -47,6 +47,7 @@ var Ball = (function () {
         //TODO need some jump anim from (actCube actFace) to (actCube actFace)
         this.view.startJumpUp(this.actFace);
         this.fpControl.startJump();
+        this.prevFace = this.actFace.clone();
     };
     /**
      * The real jump.
@@ -75,10 +76,14 @@ var Ball = (function () {
                 var newPos = this.actCube.position.clone().add(this.prevFace.clone().multiplyScalar(0.5 + this.view.radius));
                 this.direction.actFace = this.prevFace;
                 this.actFace = this.prevFace;
-                this.view.stopMoveAnimation();
-                this.fpControl.stopMoveAnimation();
-                this.view.stopJumpUpAnimation();
-                this.fpControl.stopJumpUpAnimation();
+                if (this.view.moveActive) {
+                    this.view.stopMoveAnimation();
+                    this.fpControl.stopMoveAnimation();
+                }
+                if (this.view.jumpUpActive) {
+                    this.view.stopJumpUpAnimation();
+                    this.fpControl.stopJumpUpAnimation();
+                }
                 this.direction.calculateRollAxis();
                 this.view.startJump(newPos, this.direction.actDirection, this.actFace, this.direction.rollAxis);
                 this.fpControl.startJump();
@@ -89,6 +94,7 @@ var Ball = (function () {
         if (!this.view.isAnimActive()) {
             var oldDir = this.direction.actDirection.clone();
             this.prevFace = this.actFace;
+            this.direction.prevDirection = this.direction.actDirection.clone();
             this.direction.rotateDirection(angle);
             this.direction.calculateRollAxis();
             this.view.startRotate(this.actFace, angle);
