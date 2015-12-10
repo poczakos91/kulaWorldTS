@@ -73,6 +73,7 @@ class GameBuilder {
         this.scene.remove(this.map.view);
         this.cameraHandler.tbControl.enabled = true;
         this.cameraHandler.changeToTrackballControl();
+        this.cameraHandler.fpControl = new FirstPersonControl(this.cameraHandler.camera);
     }
 
     gameSucceeded() {
