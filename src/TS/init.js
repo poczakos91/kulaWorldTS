@@ -18,6 +18,7 @@ $(function () {
     Menu.gameBuilder = new GameBuilder();
     //html element references
     var newGameButton = $("#newGameButton");
+    var coinContainer = $("#coinContainer");
     var mainMenu;
     //loading the menu
     $.ajax("res/templates/newGameMenu.html").done(function (data) {
@@ -36,6 +37,7 @@ $(function () {
         Menu.gameBuilder.stopGame();
         mainMenu.show();
         newGameButton.hide();
+        coinContainer.hide();
     }
     newGameButton.on("click touchstart", onClickNewGame);
 });

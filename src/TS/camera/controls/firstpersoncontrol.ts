@@ -168,6 +168,13 @@ class FirstPersonControl {
     }
 
     stopMoveAnimation() {
-        this.moveActive = false;
+        if(this.enabled) {
+            this.camera.up = this.upFrom.clone();
+            this.moveActive = false;
+        }
+    }
+
+    stopJumpUpAnimation() {
+        this.jumpActive = false;
     }
 }

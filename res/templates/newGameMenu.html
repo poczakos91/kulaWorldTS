@@ -54,6 +54,7 @@
             //html element references
             var newGameButton = $("#newGameButton");
             var mainMenu = $("#mainMenu");
+            var coinContainer = $("#coinContainer");
 
             /**
              * Creates a list from the downloaded mapname list
@@ -84,11 +85,13 @@
             function showMapList() {
                 mainMenu.show();
                 newGameButton.hide();
+                coinContainer.hide();
             }
 
             function hideMapList() {
                 mainMenu.hide();
                 newGameButton.show();
+                coinContainer.show();
             }
 
             function loadMap(mapName, callback, context) {

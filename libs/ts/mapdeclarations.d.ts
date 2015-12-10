@@ -10,7 +10,7 @@ interface SimplePosition {
     z: number;
 }
 
-interface WinTextOrientation {
+interface GameEndTextOrientation {
     position: SimplePosition;
     rotation: SimplePosition;
     size: number;
@@ -39,7 +39,9 @@ interface CubeDescription {
     specials: any[];
     color: string;
     position: SimplePosition;
-    neighbours: Neighbour;
+    keys: string[];
+    coins: string[];
+    traps: string[];
 }
 
 interface TargetCube {
@@ -53,7 +55,7 @@ interface mapDescription {
     backgroundObjects: any[];
     cubeSize: number;
     target: TargetCube;
-    messageOrientation: WinTextOrientation;
+    messageOrientation: GameEndTextOrientation;
     ball: BallDescription;
     elements: CubeDescription[][][];
 }

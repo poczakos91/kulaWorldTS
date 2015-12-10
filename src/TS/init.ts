@@ -19,6 +19,7 @@ $(function () {
     Menu.gameBuilder = new GameBuilder();
     //html element references
     var newGameButton = $("#newGameButton");
+    var coinContainer = $("#coinContainer");
     var mainMenu;
 
 
@@ -44,6 +45,7 @@ $(function () {
         Menu.gameBuilder.stopGame();
         mainMenu.show();
         newGameButton.hide();
+        coinContainer.hide();
     }
 
 

@@ -115,7 +115,13 @@ var FirstPersonControl = (function () {
         }
     };
     FirstPersonControl.prototype.stopMoveAnimation = function () {
-        this.moveActive = false;
+        if (this.enabled) {
+            this.camera.up = this.upFrom.clone();
+            this.moveActive = false;
+        }
+    };
+    FirstPersonControl.prototype.stopJumpUpAnimation = function () {
+        this.jumpActive = false;
     };
     return FirstPersonControl;
 })();

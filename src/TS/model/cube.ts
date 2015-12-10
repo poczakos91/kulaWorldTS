@@ -8,12 +8,25 @@ class Cube {
     position: THREE.Vector3;
     view: CubeView;
     map: MapModel;
+    keys: THREE.Vector3[];
+    coins: THREE.Vector3[];
+    traps: THREE.Vector3[];
 
-    constructor(id: number, size: number, color: number, position: THREE.Vector3, map: MapModel) {
+    constructor(id: number, size: number, color: number, position: THREE.Vector3, map: MapModel, keys: string[], coins: string[], traps: string[]) {
         this.id = id;
         this.position = position.clone();
         this.map = map;
-        this.view = new CubeView(size, color, this.position.x*size, this.position.y*size, this.position.z*size);
+        this.keys = [];
+        this.coins = [];
+        this.traps = [];
+        for(var i=0;i<keys.length;i++)
+            this.keys[i] = Face.v[keys[i]].clone();
+        for(i=0;i<coins.length;i++)
+            this.coins[i] = Face.v[coins[i]].clone();
+        for(i=0;i<traps.length;i++)
+            this.traps[i] = Face.v[traps[i]].clone();
+
+        this.view = new CubeView(size, color, this.position.x*size, this.position.y*size, this.position.z*size, this.keys, this.coins, this.traps);
     }
 
     getView(): CubeView {

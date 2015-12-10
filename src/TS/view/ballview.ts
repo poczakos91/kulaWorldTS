@@ -44,6 +44,8 @@ class BallView extends THREE.Mesh{
     jumpDuration: number;
     jumpDurationCtr: number;
 
+    //attributes needed to jump up
+    jumpUpActive: boolean;
 
     constructor(radius: number, textureURL: string, keyHandler: KeyEventHandler, map: MapModel) {
         this.keyHandler = keyHandler;
@@ -75,6 +77,9 @@ class BallView extends THREE.Mesh{
         this.gravityStrength = 30;
         this.jumpHeight = 1;
         this.jumpVelocity = new THREE.Vector3();
+
+        //init jump up
+        this.jumpUpActive = false;
     }
 
     setPosition(cube: Cube, face: THREE.Vector3) {
@@ -132,7 +137,8 @@ class BallView extends THREE.Mesh{
         this.rotActive = true;
     }
 
-    startJump(targetPos: THREE.Vector3, viewDir: THREE.Vector3, jumpDir: THREE.Vector3) {
+    startJump(targetPos: THREE.Vector3, viewDir: THREE.Vector3, jumpDir: THREE.Vector3, rollAxis: THREE.Vector3) {
+        this.rollAxis = rollAxis;
         this.jumpTargetPos = targetPos.clone();
         this.gravityDirection = jumpDir.clone().multiplyScalar(-1);
 
@@ -168,25 +174,29 @@ class BallView extends THREE.Mesh{
         this.jumpDurationCtr = 0;
     }
 
-    updateJump(delta: number) {
-        if(this.jumpDurationCtr + delta < this.jumpDuration) {
-            this.position.add(this.jumpVelocity.clone().multiplyScalar(delta));
-            this.jumpVelocity.add(this.gravityDirection.clone().multiplyScalar(this.gravityStrength * delta));
-            this.jumpDurationCtr += delta;
-        }
-        else {
-            this.position.set(this.jumpTargetPos.x, this.jumpTargetPos.y, this.jumpTargetPos.z);
-            this.jumpActive = false;
-            if (this.map.checkWinnerPosition()) {
-                this.keyHandler.moveDone();
-            }
-        }
+    startJumpUp(jumpDir: THREE.Vector3) {
+        this.jumpTargetPos = this.position.clone();
+        this.gravityDirection = jumpDir.clone().multiplyScalar(-1);
+
+        var jumpUpVelocity;
+
+        //kiszámolom a labda kezdősebességének azt a részét, ami a felemelkedéshez kell
+        jumpUpVelocity = Math.sqrt(2*this.gravityStrength*this.jumpHeight);
+
+        //a korában kiszámolt adatok birtokában már tudom, hogy meddig fog tartani az ugrás
+        this.jumpDuration = jumpUpVelocity/this.gravityStrength*2;
+
+        this.jumpVelocity = jumpDir.clone().multiplyScalar(jumpUpVelocity);
+
+        this.jumpUpActive = true;
+        this.jumpDurationCtr = 0;
     }
 
     update(delta: number) {
         if(this.rotActive) this.updateRotation(delta);
         if(this.moveActive) this.updateMove(delta);
         if(this.jumpActive) this.updateJump(delta);
+        if(this.jumpUpActive) this.updateJumpUp(delta);
     }
 
     updateRotation(delta: number) {
@@ -228,12 +238,41 @@ class BallView extends THREE.Mesh{
                 this.position.add(this.velocity2.clone().multiplyScalar(delta-newDelta));
                 this.updateRoll(this.velocity2Length*(delta-newDelta));
                 this.moveActive = false;
+                this.map.checkExtraObjects();
                 if (this.map.checkWinnerPosition()) {
                     this.keyHandler.moveDone();
                 }
             }
         }
+    }
 
+    updateJump(delta: number) {
+        if(this.jumpDurationCtr + delta < this.jumpDuration) {
+            this.position.add(this.jumpVelocity.clone().multiplyScalar(delta));
+            this.jumpVelocity.add(this.gravityDirection.clone().multiplyScalar(this.gravityStrength * delta));
+            this.jumpDurationCtr += delta;
+            this.updateRoll(Math.PI*delta);
+        }
+        else {
+            this.position.set(this.jumpTargetPos.x, this.jumpTargetPos.y, this.jumpTargetPos.z);
+            this.jumpActive = false;
+            this.map.checkExtraObjects();
+            if (this.map.checkWinnerPosition()) {
+                this.keyHandler.moveDone();
+            }
+        }
+    }
+
+    updateJumpUp(delta: number) {
+        if(this.jumpDurationCtr + delta < this.jumpDuration) {
+            this.position.add(this.jumpVelocity.clone().multiplyScalar(delta));
+            this.jumpVelocity.add(this.gravityDirection.clone().multiplyScalar(this.gravityStrength * delta));
+            this.jumpDurationCtr += delta;
+        }
+        else {
+            this.position.set(this.jumpTargetPos.x, this.jumpTargetPos.y, this.jumpTargetPos.z);
+            this.jumpUpActive = false;
+        }
     }
 
     updateRoll(length: number) {
@@ -241,7 +280,7 @@ class BallView extends THREE.Mesh{
     }
 
     isAnimActive(): boolean {
-        return (this.moveActive || this.rotActive || this.jumpActive);
+        return (this.moveActive || this.rotActive || this.jumpActive || this.jumpUpActive);
     }
 
     isMoveAnimActive(): boolean {
@@ -262,6 +301,10 @@ class BallView extends THREE.Mesh{
 
     stopMoveAnimation() {
         this.moveActive = false;
+    }
+
+    stopJumpUpAnimation() {
+        this.jumpUpActive = false;
     }
 
 }

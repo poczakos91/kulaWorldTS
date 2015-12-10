@@ -53,8 +53,18 @@ class GameBuilder {
         this.keyHandler.addListeners();
         this.cameraHandler.addBall(this.map.ball);
 
-        this.idleLoop = new Idle(this.renderer,this.scene,this.cameraHandler, this.map.ball.view);
-        this.idleLoop.onIdle();
+        //I need this little tricky solution to start the game because the initiating of cubeViews can take
+        //a lot of time. CubeViews download .obj models from server and sign this download with their pendingDownloads
+        //attributes. So if there is a cubeView which has nonzero pendingDownloads attributes, the model downloading isn't happened yet.
+        var intervalID = setInterval(function() {
+            for(var i=0;i<this.map.cubes.length;i++) {
+                if(this.map.cubes[i].view.pendingDownloads > 0)
+                    return;
+            }
+            clearInterval(intervalID);
+            this.idleLoop = new Idle(this.renderer,this.scene,this.cameraHandler, this.map.ball.view, this.map.cubes);
+            this.idleLoop.onIdle();
+        }.bind(this), 20);
     }
 
     stopGame() {

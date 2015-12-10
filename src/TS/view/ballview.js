@@ -37,6 +37,8 @@ var BallView = (function (_super) {
         this.gravityStrength = 30;
         this.jumpHeight = 1;
         this.jumpVelocity = new THREE.Vector3();
+        //init jump up
+        this.jumpUpActive = false;
     }
     BallView.prototype.setPosition = function (cube, face) {
         var newPos = cube.position.clone();
@@ -86,7 +88,8 @@ var BallView = (function (_super) {
         this.actRotAngle = 0;
         this.rotActive = true;
     };
-    BallView.prototype.startJump = function (targetPos, viewDir, jumpDir) {
+    BallView.prototype.startJump = function (targetPos, viewDir, jumpDir, rollAxis) {
+        this.rollAxis = rollAxis;
         this.jumpTargetPos = targetPos.clone();
         this.gravityDirection = jumpDir.clone().multiplyScalar(-1);
         var jumpUpVelocity, jumpForwardVelocity;
@@ -114,19 +117,17 @@ var BallView = (function (_super) {
         this.jumpActive = true;
         this.jumpDurationCtr = 0;
     };
-    BallView.prototype.updateJump = function (delta) {
-        if (this.jumpDurationCtr + delta < this.jumpDuration) {
-            this.position.add(this.jumpVelocity.clone().multiplyScalar(delta));
-            this.jumpVelocity.add(this.gravityDirection.clone().multiplyScalar(this.gravityStrength * delta));
-            this.jumpDurationCtr += delta;
-        }
-        else {
-            this.position.set(this.jumpTargetPos.x, this.jumpTargetPos.y, this.jumpTargetPos.z);
-            this.jumpActive = false;
-            if (this.map.checkWinnerPosition()) {
-                this.keyHandler.moveDone();
-            }
-        }
+    BallView.prototype.startJumpUp = function (jumpDir) {
+        this.jumpTargetPos = this.position.clone();
+        this.gravityDirection = jumpDir.clone().multiplyScalar(-1);
+        var jumpUpVelocity;
+        //kiszámolom a labda kezdősebességének azt a részét, ami a felemelkedéshez kell
+        jumpUpVelocity = Math.sqrt(2 * this.gravityStrength * this.jumpHeight);
+        //a korában kiszámolt adatok birtokában már tudom, hogy meddig fog tartani az ugrás
+        this.jumpDuration = jumpUpVelocity / this.gravityStrength * 2;
+        this.jumpVelocity = jumpDir.clone().multiplyScalar(jumpUpVelocity);
+        this.jumpUpActive = true;
+        this.jumpDurationCtr = 0;
     };
     BallView.prototype.update = function (delta) {
         if (this.rotActive)
@@ -135,6 +136,8 @@ var BallView = (function (_super) {
             this.updateMove(delta);
         if (this.jumpActive)
             this.updateJump(delta);
+        if (this.jumpUpActive)
+            this.updateJumpUp(delta);
     };
     BallView.prototype.updateRotation = function (delta) {
         var rotDelta = this.fullRotAngle * delta * 2;
@@ -173,17 +176,45 @@ var BallView = (function (_super) {
                 this.position.add(this.velocity2.clone().multiplyScalar(delta - newDelta));
                 this.updateRoll(this.velocity2Length * (delta - newDelta));
                 this.moveActive = false;
+                this.map.checkExtraObjects();
                 if (this.map.checkWinnerPosition()) {
                     this.keyHandler.moveDone();
                 }
             }
         }
     };
+    BallView.prototype.updateJump = function (delta) {
+        if (this.jumpDurationCtr + delta < this.jumpDuration) {
+            this.position.add(this.jumpVelocity.clone().multiplyScalar(delta));
+            this.jumpVelocity.add(this.gravityDirection.clone().multiplyScalar(this.gravityStrength * delta));
+            this.jumpDurationCtr += delta;
+            this.updateRoll(Math.PI * delta);
+        }
+        else {
+            this.position.set(this.jumpTargetPos.x, this.jumpTargetPos.y, this.jumpTargetPos.z);
+            this.jumpActive = false;
+            this.map.checkExtraObjects();
+            if (this.map.checkWinnerPosition()) {
+                this.keyHandler.moveDone();
+            }
+        }
+    };
+    BallView.prototype.updateJumpUp = function (delta) {
+        if (this.jumpDurationCtr + delta < this.jumpDuration) {
+            this.position.add(this.jumpVelocity.clone().multiplyScalar(delta));
+            this.jumpVelocity.add(this.gravityDirection.clone().multiplyScalar(this.gravityStrength * delta));
+            this.jumpDurationCtr += delta;
+        }
+        else {
+            this.position.set(this.jumpTargetPos.x, this.jumpTargetPos.y, this.jumpTargetPos.z);
+            this.jumpUpActive = false;
+        }
+    };
     BallView.prototype.updateRoll = function (length) {
         this.rotateAroundWorldAxis(this.rollAxis, length / (2 * this.radius));
     };
     BallView.prototype.isAnimActive = function () {
-        return (this.moveActive || this.rotActive || this.jumpActive);
+        return (this.moveActive || this.rotActive || this.jumpActive || this.jumpUpActive);
     };
     BallView.prototype.isMoveAnimActive = function () {
         return this.moveActive;
@@ -200,6 +231,9 @@ var BallView = (function (_super) {
     };
     BallView.prototype.stopMoveAnimation = function () {
         this.moveActive = false;
+    };
+    BallView.prototype.stopJumpUpAnimation = function () {
+        this.jumpUpActive = false;
     };
     return BallView;
 })(THREE.Mesh);

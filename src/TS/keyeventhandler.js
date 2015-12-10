@@ -16,7 +16,10 @@ var KeyEventHandler = (function () {
             case 38:
                 if (!this.pushedKeys.forward) {
                     this.pushedKeys.forward = true;
-                    this.ball.move();
+                    if (this.ball.view.jumpUpActive)
+                        this.ball.jumpForward();
+                    else
+                        this.ball.move();
                 }
                 break;
             case 37:
@@ -32,7 +35,7 @@ var KeyEventHandler = (function () {
                 }
                 break;
             case 32:
-                if (!this.pushedKeys.jump) {
+                if (!this.pushedKeys.jump && !this.ball.view.jumpActive && !this.ball.view.jumpUpActive) {
                     this.pushedKeys.jump = true;
                     if (this.ball.view.isMoveAnimActive() || (!this.ball.view.isRotAnimActive() && this.pushedKeys.forward)) {
                         this.ball.jumpForward();

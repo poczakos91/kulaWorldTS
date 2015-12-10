@@ -18,15 +18,15 @@ var MapModel = (function () {
                 for (var k = 0; k < rawMap.elements[i][j].length; k++) {
                     var cube = rawMap.elements[i][j][k];
                     if (cube.id != undefined) {
-                        this.cubes.push(new Cube(cube.id, rawMap.cubeSize, parseInt(cube.color, 16), new THREE.Vector3(cube.position.x, cube.position.y, cube.position.z), this));
+                        this.cubes.push(new Cube(cube.id, rawMap.cubeSize, parseInt(cube.color, 16), new THREE.Vector3(cube.position.x, cube.position.y, cube.position.z), this, cube.keys ? cube.keys : [], cube.coins ? cube.coins : [], cube.traps ? cube.traps : []));
                     }
                 }
             }
         }
-        this.winTextOrientation = rawMap.messageOrientation;
+        this.gameEndTextOrientation = rawMap.messageOrientation;
         this.target = rawMap.target;
         //coloring the target cube's target face on the map
-        this.getCubeByID(this.target.id).getView().paintFace(this.target.face, 0x00ff00);
+        this.getCubeByID(this.target.id).getView().paintFace(this.target.face, 0xff2800);
         this.view = new MapView();
         this.view.appendChildrenFromModel(this.cubes);
         this.view.position.set(0, 0, 0);
@@ -34,6 +34,12 @@ var MapModel = (function () {
         var ballView = new BallView(0.3, rawMap.ball.texture.colorMapURL, keyHandler, this);
         this.view.add(ballView);
         this.ball.setView(ballView);
+        this.keysLeft = 0;
+        for (var i = 0; i < this.cubes.length; i++) {
+            this.keysLeft += this.cubes[i].keys.length;
+        }
+        this.checkExtraObjects();
+        this.coinCounter = $("#coinCounter");
     };
     MapModel.prototype.getCubeByID = function (id) {
         for (var i = this.cubes.length - 1; i >= 0; i--) {
@@ -73,32 +79,63 @@ var MapModel = (function () {
         return cubes;
     };
     MapModel.prototype.checkWinnerPosition = function () {
-        if (this.ball.actCube.id === this.target.id && Face.vectorToString(this.ball.actFace) === this.target.face) {
-            setTimeout(function () {
-                Menu.gameBuilder.gameSucceeded();
-                var options = {
-                    size: this.winTextOrientation.size,
-                    height: 0.2,
-                    weight: "normal",
-                    bevelEnabled: false,
-                    curveSegments: 12,
-                    font: "helvetiker"
-                };
-                var geom = new THREE.TextGeometry("You win", options);
-                var mat = new THREE.MeshPhongMaterial({
-                    specular: 0xffffff,
-                    color: 0x33bb33,
-                    shininess: 100,
-                    metal: true
-                });
-                var youWin = THREE.SceneUtils.createMultiMaterialObject(geom, [mat]);
-                youWin.position.set(this.winTextOrientation.position.x, this.winTextOrientation.position.y, this.winTextOrientation.position.z);
-                youWin.rotation.set(this.winTextOrientation.rotation.x * Math.PI, this.winTextOrientation.rotation.y * Math.PI, this.winTextOrientation.rotation.z * Math.PI);
-                this.view.add(youWin);
-            }.bind(this), 100);
+        if (this.ball.actCube.id === this.target.id && Face.vectorToString(this.ball.actFace) === this.target.face && this.keysLeft === 0) {
+            this.showEndMessage("You win! :)", 0x33bb33);
             return false;
         }
         return true;
+    };
+    MapModel.prototype.checkExtraObjects = function () {
+        var actCube = this.ball.actCube;
+        var actFace = this.ball.actFace;
+        for (var i = 0; i < actCube.keys.length; i++) {
+            if (actCube.keys[i].equals(actFace)) {
+                actCube.keys.splice(i, 1);
+                actCube.view.removeObject(actFace);
+                this.keysLeft--;
+                if (this.keysLeft == 0)
+                    this.getCubeByID(this.target.id).getView().paintFace(this.target.face, 0x00ff00);
+                return;
+            }
+        }
+        for (i = 0; i < actCube.coins.length; i++) {
+            if (actCube.coins[i].equals(actFace)) {
+                actCube.coins.splice(i, 1);
+                actCube.view.removeObject(actFace);
+                this.coinCounter.text(parseInt(this.coinCounter.text()) + 10);
+                return;
+            }
+        }
+        for (i = 0; i < actCube.traps.length; i++) {
+            if (actCube.traps[i].equals(actFace)) {
+                this.showEndMessage("Game over :(", 0xff2800);
+                return;
+            }
+        }
+    };
+    MapModel.prototype.showEndMessage = function (text, color) {
+        setTimeout(function () {
+            Menu.gameBuilder.gameSucceeded();
+            var options = {
+                size: this.gameEndTextOrientation.size,
+                height: 0.2,
+                weight: "normal",
+                bevelEnabled: false,
+                curveSegments: 12,
+                font: "helvetiker"
+            };
+            var geom = new THREE.TextGeometry(text, options);
+            var mat = new THREE.MeshPhongMaterial({
+                specular: 0xffffff,
+                color: color,
+                shininess: 100,
+                metal: true
+            });
+            var youWin = THREE.SceneUtils.createMultiMaterialObject(geom, [mat]);
+            youWin.position.set(this.gameEndTextOrientation.position.x, this.gameEndTextOrientation.position.y, this.gameEndTextOrientation.position.z);
+            youWin.rotation.set(this.gameEndTextOrientation.rotation.x * Math.PI, this.gameEndTextOrientation.rotation.y * Math.PI, this.gameEndTextOrientation.rotation.z * Math.PI);
+            this.view.add(youWin);
+        }.bind(this), 100);
     };
     return MapModel;
 })();

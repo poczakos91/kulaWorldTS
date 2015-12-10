@@ -71,16 +71,23 @@ class Ball {
      */
     jumpUp() {
         //TODO need some jump anim from (actCube actFace) to (actCube actFace)
+        this.view.startJumpUp(this.actFace);
+        this.fpControl.startJump();
     }
 
     /**
      * The real jump.
      */
     jumpForward() {
+        Direction.correct(this.direction.actDirection);
         //the jump action is OK if:
-        //  1. the ball rolls between two cubes on the same faces (from (cube A face x) to (cube B face x)) or
-        //  2. the ball rolls between one cube's faces (from (cube A face x) to (cube A face y)) and it is still on the first face
-        if(this.prevFace.equals(this.actFace) || (this.view.isMoveAnimActive() && !this.view.path2Active)) {
+        //  1. the ball rolls or rolled between two cubes on the same faces (from (cube A face x) to (cube B face x)) or
+        var condition1 = this.prevFace.equals(this.actFace);
+        //  2. the ball rolls between one cube's faces (from (cube A face x) to (cube A face y)) and it is still on the first face or
+        var condition2 = (this.view.isMoveAnimActive() && !this.view.path2Active);
+        //  3. tha ball is making a jumpUp and then comes a 'forward' event. If the jumpUp is in early phase (pl. the first 0.2 sec) it can transform to a jumpForward
+        var condition3 = (this.view.jumpUpActive && this.view.jumpDurationCtr/this.view.jumpDuration < 0.3);
+        if(condition1 || condition2 || condition3) {
             var newCube: Cube;
             if(this.view.isMoveAnimActive()) {
                 newCube = this.prevCube.jumpRequest(this.prevFace, this.direction.prevDirection);
@@ -91,8 +98,6 @@ class Ball {
 
             if(newCube) {
                 if(this.view.isMoveAnimActive()) this.direction.actDirection = this.direction.prevDirection;
-                this.view.stopMoveAnimation();
-                this.fpControl.stopMoveAnimation();
 
                 this.actCube = newCube;
                 var newPos = this.actCube.position.clone().add(this.prevFace.clone().multiplyScalar(0.5+this.view.radius));
@@ -100,7 +105,13 @@ class Ball {
                 this.direction.actFace = this.prevFace;
                 this.actFace = this.prevFace;
 
-                this.view.startJump(newPos, this.direction.actDirection, this.actFace);
+                this.view.stopMoveAnimation();
+                this.fpControl.stopMoveAnimation();
+                this.view.stopJumpUpAnimation();
+                this.fpControl.stopJumpUpAnimation();
+
+                this.direction.calculateRollAxis();
+                this.view.startJump(newPos, this.direction.actDirection, this.actFace, this.direction.rollAxis);
                 this.fpControl.startJump();
             }
         }
@@ -109,6 +120,7 @@ class Ball {
     rotate(angle: number) {
         if(!this.view.isAnimActive()) {
             var oldDir = this.direction.actDirection.clone();
+            this.prevFace = this.actFace;
             this.direction.rotateDirection(angle);
             this.direction.calculateRollAxis();
             this.view.startRotate(this.actFace, angle);

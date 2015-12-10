@@ -11,8 +11,9 @@ class Idle {
     ballView: BallView;
     clock: THREE.Clock;
     onIdleWithContext: any;
+    updateableCubes: CubeView[];
 
-    constructor(renderer: THREE.WebGLRenderer, scene: THREE.Scene, cameraHandler: CameraHandler, ballView: BallView) {
+    constructor(renderer: THREE.WebGLRenderer, scene: THREE.Scene, cameraHandler: CameraHandler, ballView: BallView, cubes: Cube[]) {
         this.renderer = renderer;
         this.scene = scene;
         this.cameraHandler = cameraHandler;
@@ -20,6 +21,12 @@ class Idle {
         this.clock = new THREE.Clock();
         this.clock.start();
         this.onIdleWithContext = this.onIdle.bind(this);
+        this.updateableCubes = [];
+        for(var i=0;i<cubes.length;i++) {
+            if(cubes[i].keys.length > 0 || cubes[i].coins.length > 0) {
+                this.updateableCubes.push(cubes[i].view);
+            }
+        }
     }
 
     onIdle(): void {
@@ -28,6 +35,9 @@ class Idle {
         var delta = this.clock.getDelta();
         this.ballView.update(delta);
         this.cameraHandler.update(delta);
+
+        for(var i=0;i<this.updateableCubes.length;i++)
+            this.updateableCubes[i].update(delta);
     }
 
     removeOnIdle(): void {
