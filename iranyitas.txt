@@ -1,0 +1,29 @@
+JÁTÉK CÉL: 
+	A labda eljuttatása az EXIT feliratú kocka megfelelő oldalára.
+	Kezdetben az exit felirat piros. Ez azért van mert a kijárat még nem átjárható. 
+	Ahhoz, hogy átjárható legyen, fel kell szedni a pályán lévő kulcsokat.
+	Ha ez megtörtént, az exit felirat zöld színűre vált. 
+	Ha csapdára lépsz (medvecsapda szerű cucc) a játéknak vége.
+	A pályán opcionálisan lehetnek pénzérmék, amelyek megszerzése nem kötelező
+	de felvételük eufórikus érzést vált ki a játékosnál.
+	
+IRÁNYÍTÁS:
+	- A jobb/bal nyilakkal a labda jobbra/balra fordul. Az előre nyíl megnyomásával
+	a labda elindul előre (ha az lehetséges). 
+	- A space megnyomásával a labda felugrik. Ha eközben az előre nyilat is megnyomjuk
+	akkor a labda előre ugrik két kockányit (ha az lehetséges).
+	- Az 's' billentyű lenyomásával lehet kameranézetet váltani (belső/távoli nézet). 
+	Alapból a távoli nézettel indul a játék, mellyel remekül át lehet tekinteni a pályát,
+	viszotn a labda irányítása nehézkes. Távoli nézetben az egér bal gombját lenyomva az
+	egér mozgatásával tudjuk mozgatni a kamerát. A másik nézetben (belső) úgymond a labda
+	szemszögéből látjuk a világot.
+	
+LEHETSÉGES LÉPÉSEK:
+	Ez meg szokta zavarni a játékot kipróbálókat úgyhogy leírom. 
+	1. nincs tolatás
+	2. a labda át tud gurulni ugyanazon kocka egy másik oldalára, ha a kockának (a labda
+	   nézőpontjából értett) jobb és ball oldalán nincsenek kockák.
+	3. az előre ugrás mindig (a labda nézeti tengelye irányában értett) két kockányi távolságot 
+	   jelent, tehát nem lehet olyan kockára ugrani, amely 1 távolságra van az aktuális kockától.
+	   Ez a (nézeti tengely irányában vett) két kockányira lévő kocka viszont (belső nézetből vett)
+	   y tengely mentén akármilyen mélyen lehet.
