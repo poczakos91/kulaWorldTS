@@ -2,3 +2,4 @@
 favicon_raw.png
 src/**/*.js
 src/**/*.map
+res/maps/*.json
