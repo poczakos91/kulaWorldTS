@@ -78,7 +78,9 @@
              * @param e
              */
             function onClickListItem(e) {
-                loadMap(e.currentTarget.innerText, Menu.gameBuilder.startGame, Menu.gameBuilder);
+                var mapName = e.currentTarget.innerText;
+                if(!mapName) mapName = e.currentTarget.innerHTML;
+                loadMap(mapName, Menu.gameBuilder.startGame, Menu.gameBuilder);
                 hideMapList();
             }
 
