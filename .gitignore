@@ -1,2 +1,4 @@
 .idea/
 favicon_raw.png
+src/**/*.js
+src/**/*.map
