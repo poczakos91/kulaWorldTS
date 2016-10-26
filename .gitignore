@@ -3,3 +3,6 @@ favicon_raw.png
 src/**/*.js
 src/**/*.map
 res/maps/*.json
+build/*
+node_modules/**/*
+temp/**/*
