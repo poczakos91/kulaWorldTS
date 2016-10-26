@@ -1,4 +1,5 @@
 <?php
+    header('Access-Control-Allow-Origin: *');
 	try {
 		$directory = '../../res/maps';
 		$fileList = array_diff(scandir($directory), array('..', '.'));
