@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "module": "system",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "outFile": "build/output.js",
+    "sourceMap": true,
+    "allowJs": true
+  },
+  "include": [
+    "libs/js/jquery-1.10.0.min",
+    "libs/js/three",
+    "libs/js/OBJLoader",
+    "libs/js/MTLLoader",
+    "libs/js/OBJMTLLoader",
+    "libs/js/TrackballControls",
+    "libs/js/helvetiker_regular.typeface",
+    "libs/js/helvetiker_bold.typeface",
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "libs/ts/threejs/MTLLoader.d.ts",
+    "libs/ts/threejs/OBJMTLLoader.d.ts",
+    "**/*.spec.ts"
+  ]
+}
