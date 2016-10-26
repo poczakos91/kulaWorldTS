@@ -45,7 +45,7 @@ class GameBuilder {
         this.renderer.setSize(window.innerWidth, window.innerHeight);
     }
 
-    startGame(rawMap) {
+    startGame(rawMap: string) {
         this.map = new MapModel();
         this.map.generateModel(JSON.parse(rawMap), this.keyHandler, this.cameraHandler);
         this.scene.add(this.map.view);

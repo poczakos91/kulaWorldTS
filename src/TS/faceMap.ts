@@ -26,6 +26,18 @@ module Face {
         export var right = new THREE.Vector3(-1,0,0);
         export var front = new THREE.Vector3(0,0,1);
         export var rear = new THREE.Vector3(0,0,-1);
+        export function get(key: string): THREE.Vector3 {
+            switch (key) {
+                case "top": return top;
+                case "bottom": return bottom;
+                case "left": return left;
+                case "right": return right;
+                case "front": return front;
+                case "rear": return rear;
+                default:
+                    throw "There is no face vector like: "+key;
+            }
+        }
     }
 
     export function stringToVector(face: string) {

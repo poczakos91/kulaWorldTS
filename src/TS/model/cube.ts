@@ -20,11 +20,11 @@ class Cube {
         this.coins = [];
         this.traps = [];
         for(var i=0;i<keys.length;i++)
-            this.keys[i] = Face.v[keys[i]].clone();
+            this.keys[i] = Face.v.get(keys[i]).clone();
         for(i=0;i<coins.length;i++)
-            this.coins[i] = Face.v[coins[i]].clone();
+            this.coins[i] = Face.v.get(coins[i]).clone();
         for(i=0;i<traps.length;i++)
-            this.traps[i] = Face.v[traps[i]].clone();
+            this.traps[i] = Face.v.get(traps[i]).clone();
 
         this.view = new CubeView(size, color, this.position.x*size, this.position.y*size, this.position.z*size, this.keys, this.coins, this.traps);
     }
@@ -88,7 +88,7 @@ class Cube {
      */
     jumpRequest(fromFace: THREE.Vector3, viewDir: THREE.Vector3): Cube {
         //searching for obstacles which can stop the jump action between the starting position and the target position
-        var possibleObstacle1, possibleObstacle2;
+        var possibleObstacle1: Cube, possibleObstacle2: Cube;
 
         possibleObstacle1 = this.map.getCubeByPosition(this.position.clone().add(fromFace).add(viewDir));
         possibleObstacle2 = this.map.getCubeByPosition(this.position.clone().add(fromFace.clone().multiplyScalar(2).add(viewDir)));
@@ -102,7 +102,7 @@ class Cube {
 
         //searching for cubes on those the ball can jump at
         var tempPos = this.position.clone().add(viewDir.clone().multiplyScalar(2));
-        var dimIndex1, dimValue1, dimIndex2, dimValue2, dimIndexMain, dimValueMain;
+        var dimIndex1:number, dimValue1:number, dimIndex2:number, dimValue2:number, dimIndexMain:number, dimValueMain:number;
         for(var i=0;i<3;i++) {
             if(fromFace.getComponent(i)) {
                 dimIndexMain = i; dimValueMain = tempPos.getComponent(i);

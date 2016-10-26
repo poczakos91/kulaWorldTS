@@ -17,8 +17,8 @@ class Ball {
 
     constructor(startingCube: Cube, startingFace: string, startingDirection: string,/* map: MapModel,*/ fpControl: FirstPersonControl) {
         this.actCube = startingCube;
-        this.actFace = Face.v[startingFace];
-        this.prevFace = Face.v[startingFace];
+        this.actFace = Face.v.get(startingFace);
+        this.prevFace = Face.v.get(startingFace);
         this.direction = new DirectionHandler(startingFace, startingDirection);
         //this.map = map;
         this.fpControl = fpControl;

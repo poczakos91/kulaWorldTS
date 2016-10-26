@@ -20,7 +20,7 @@ $(function () {
     //html element references
     var newGameButton = $("#newGameButton");
     var coinContainer = $("#coinContainer");
-    var mainMenu;
+    var mainMenu: JQuery;
 
 
     //loading the menu

@@ -19,16 +19,8 @@ class Space {
     createPlanet(geom:THREE.SphereGeometry, textureSource:string, bumpMapSource?:string):THREE.Object3D {
         var planetTexture = THREE.ImageUtils.loadTexture(textureSource);
         var planetMaterial:THREE.MeshLambertMaterial;
-        if (bumpMapSource) {
-            var planetBumpMap = THREE.ImageUtils.loadTexture(bumpMapSource);
-            planetMaterial = new THREE.MeshLambertMaterial({
-                map: planetTexture,
-                bumpMap: planetBumpMap
-            });
-        }
-        else {
-            planetMaterial = new THREE.MeshPhongMaterial({map: planetTexture});
-        }
+        planetMaterial = new THREE.MeshLambertMaterial({map: planetTexture});
+
 
         return new THREE.Mesh(geom, planetMaterial);
     }
@@ -44,7 +36,7 @@ class Space {
         var range = 400;
         var sideLength = range * 2;
         var starDensity = 500;
-        var randX, randY;
+        var randX:number, randY:number;
         var color = new THREE.Color(0xffffff);
         //front
         for (var i = 0; i < starDensity; i++) {

@@ -41,7 +41,7 @@ class DirectionHandler {
      * Rotates the actDirection vector with the given angle
      * @param angle
      */
-    rotateDirection(angle) {
+    rotateDirection(angle: number) {
         this.actDirection.applyAxisAngle(this.actFace,angle);
     }
 

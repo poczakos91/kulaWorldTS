@@ -57,7 +57,10 @@ class MapModel {
             rawMap.ball.startingDirection,
             cameraHandler.fpControl
         );
-        var ballView: BallView = new BallView(0.3,rawMap.ball.texture.colorMapURL,keyHandler, this);
+
+        var texture = THREE.ImageUtils.loadTexture(rawMap.ball.texture.colorMapURL);
+        texture.minFilter = THREE.LinearFilter;
+        var ballView: BallView = new BallView(0.3,texture,keyHandler, this);
         this.view.add(ballView);
         this.ball.setView(ballView);
 
@@ -81,7 +84,7 @@ class MapModel {
             opacity: 0.4,
         });
         var exitSign = THREE.SceneUtils.createMultiMaterialObject(geom, [mat]);
-        exitSign.position.add(Face.v[this.target.face].clone().multiplyScalar(0.6));
+        exitSign.position.add(Face.v.get(this.target.face).clone().multiplyScalar(0.6));
         switch (this.target.face) {
             case Face.s.bottom : exitSign.rotateX(Math.PI); break;
             case Face.s.rear : exitSign.rotateX(-Math.PI/2); break;
@@ -90,7 +93,7 @@ class MapModel {
             case Face.s.right : exitSign.rotateZ(Math.PI/2); break;
         }
         targetCube.view.add(exitSign);
-        targetCube.view.objects.push({name: "exit", onFace: Face.v[this.target.face], object: exitSign});
+        targetCube.view.objects.push({name: "exit", onFace: Face.v.get(this.target.face), object: exitSign});
 
 
         this.keysLeft = 0;

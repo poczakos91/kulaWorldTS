@@ -26,7 +26,7 @@ class KeyEventHandler {
         this.ball = ball;
     }
 
-    listenKeyDowns(e) {
+    listenKeyDowns(e: any) {
         switch(e.which) {
             case 38 :                                   //FORWARD
                 if(!this.pushedKeys.forward) {
@@ -65,7 +65,7 @@ class KeyEventHandler {
         }
     }
 
-    listenKeyUps(e) {
+    listenKeyUps(e: any) {
         switch(e.which) {
             case 38 :                                   //FORWARD
                 this.pushedKeys.forward = false;

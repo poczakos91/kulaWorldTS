@@ -47,13 +47,13 @@ class BallView extends THREE.Mesh{
     //attributes needed to jump up
     jumpUpActive: boolean;
 
-    constructor(radius: number, textureURL: string, keyHandler: KeyEventHandler, map: MapModel) {
+    constructor(radius: number, texture: THREE.Texture, keyHandler: KeyEventHandler, map: MapModel) {
+        super(new THREE.SphereGeometry(radius,20,20), new THREE.MeshPhongMaterial({map: texture}));
+
         this.keyHandler = keyHandler;
         this.radius = radius;
+
         this.map = map;
-        var texture = THREE.ImageUtils.loadTexture(textureURL);
-        texture.minFilter = THREE.LinearFilter;
-        super(new THREE.SphereGeometry(radius,20,20), new THREE.MeshPhongMaterial({map: texture}));
         this.moveSpeed = 4;
 
         //init rotation tools
@@ -142,13 +142,13 @@ class BallView extends THREE.Mesh{
         this.jumpTargetPos = targetPos.clone();
         this.gravityDirection = jumpDir.clone().multiplyScalar(-1);
 
-        var jumpUpVelocity, jumpForwardVelocity;
+        var jumpUpVelocity: number, jumpForwardVelocity:number;
 
         //kiszámolom a labda kezdősebességének azt a részét, ami a felemelkedéshez kell
         jumpUpVelocity = Math.sqrt(2*this.gravityStrength*this.jumpHeight);
 
         //kiszámolom úthossz (viewDir.getComponent(i) !== null) komponensének azon részét, amit a labda az ugrásának legmagasabb pontjától a földetérésig megtesz (jumpDistanceY2)
-        var jumpDistanceY2;
+        var jumpDistanceY2: number;
         for(var i=0;i<3;i++) {
             if(viewDir.getComponent(i)) {
                 var helperVector: THREE.Vector3 = new THREE.Vector3();
@@ -178,7 +178,7 @@ class BallView extends THREE.Mesh{
         this.jumpTargetPos = this.position.clone();
         this.gravityDirection = jumpDir.clone().multiplyScalar(-1);
 
-        var jumpUpVelocity;
+        var jumpUpVelocity: number;
 
         //kiszámolom a labda kezdősebességének azt a részét, ami a felemelkedéshez kell
         jumpUpVelocity = Math.sqrt(2*this.gravityStrength*this.jumpHeight);

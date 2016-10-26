@@ -38,7 +38,7 @@ class CubeView extends THREE.Mesh {
                     this.pendingDownloads--;
                 }.bind(this, keys[i]),
                 function(){},
-                function(reason){
+                function(reason:any){
                     console.log("something went wrong during the loading of the key model");
                     this.pendingDownloads--;
                     console.log(reason);
@@ -67,7 +67,7 @@ class CubeView extends THREE.Mesh {
                 }.bind(this,coins[i]),
                 function () {
                 },
-                function (reason) {
+                function (reason: any) {
                     console.log("something went wrong during the loading of the key model");
                     this.pendingDownloads--;
                     console.log(reason);
@@ -96,7 +96,7 @@ class CubeView extends THREE.Mesh {
                 }.bind(this,traps[i]),
                 function () {
                 },
-                function (reason) {
+                function (reason: any) {
                     console.log("something went wrong during the loading of the key model");
                     this.pendingDownloads--;
                     console.log(reason);
@@ -106,7 +106,7 @@ class CubeView extends THREE.Mesh {
     }
 
     paintFace(face:string, color: number) {
-        var i,j;
+        var i: number,j : number;
         switch (face) {
             case "top": i=4;j=5; break;
             case "bottom": i=6;j=7; break;
@@ -130,7 +130,7 @@ class CubeView extends THREE.Mesh {
         }
     }
 
-    update(delta) {
+    update(delta: number) {
         for(var i= 0;i<this.objects.length;i++) {
             if(this.objects[i].name !== "trap") {
                 var rot = Math.PI * delta;
